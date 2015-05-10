@@ -1,0 +1,13 @@
+# Global plugin configurations
+
+enabled: true                # Set to false to disable this plugin completely
+built_in_css: true           # Use built-in CSS of the plugin
+
+# Global and page specific configurations
+
+title: true                  # Title to insert in the Table of Contents
+anchorlink: true             # Set to true to cause all headers to link to themselves
+permalink: true              # Set to true to generate permanent links at the beginning of each header
+
+baselevel: 1                 # Base level for headings
+headinglevel: 6              # Maximum heading level to show in TOC

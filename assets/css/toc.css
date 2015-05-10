@@ -1,0 +1,84 @@
+/* General styles */
+.table-of-contents {
+	font-size: .8em;
+	display: inline-block;
+}
+.table-of-contents.toc,
+.table-of-contents.minitoc {
+	background-color: #F8F8F8;
+	box-shadow: 0 0 5px 0 rgba(50, 50, 50, 0.4);
+	padding: 1em 2em;
+	min-width: 25%;
+}
+.table-of-contents.toc {
+	float: right;
+	margin: 0 0 2em 2em;
+}
+
+/* TOC elements */
+.table-of-contents .toctitle {
+	display: block;
+	font-size: larger;
+	font-weight: bold;
+	margin-bottom: .5em;
+}
+.table-of-contents ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.table-of-contents ul ul {
+	padding: 0 1em;
+}
+.table-of-contents li {
+	margin: 0 0 .25em;
+	display: block;
+	color: #808080;
+}
+.table-of-contents .toclink:before {
+	content: "\00BB"; 									/* &raquo; */
+	display: inline;
+	margin-right: 0.5ex;
+}
+
+/* Mini TOC */
+.table-of-contents.minitoc {
+	margin: -1em 0;
+}
+
+/* Blog adjustments */
+.list-item {
+	clear: right;
+	display: inline-block;
+	width: 100%;
+}
+
+/* Anchorlinks */
+.headeranchor-link {
+	color: inherit;
+	outline: none;
+	position: relative;
+}
+.headeranchor-link:before {
+	content: "#";   	 									/* "\2693" Dingsbat anchor */
+	display: inline-block;
+	margin-left: -1em;
+	padding-right: .3em;
+	text-align: right;
+	text-decoration: none;
+	width: 1em;
+
+	position: relative;
+	left: -9999px;
+	height: 0;
+	opacity: 0;
+	visibility: hidden;
+
+	transition: opacity .4s ease-in-out 0s
+}
+.headeranchor-link:hover:before {
+	left: 0;
+	height: auto;
+	opacity: 1;
+	visibility: visible;
+}

@@ -1,0 +1,87 @@
+name: "Toc"
+version: 1.0.0
+description: "This plugin automagically generates a (minified) Table of Contents based on special markers in the document and adds it into the resulting HTML document."
+icon: connectdevelop
+author:
+  name: Sommerregen
+  email: sommerregen@benjamin-regler.de
+homepage: https://github.com/sommerregen/grav-plugin-toc
+keywords: [toc, filter, formatter, plugin]
+docs: https://github.com/sommerregen/grav-plugin-toc/blob/master/README.md
+bugs: https://github.com/sommerregen/grav-plugin-toc/issues
+license: MIT
+
+form:
+  validation: strict
+  fields:
+    enabled:
+      type: toggle
+      label: "Plugin Status"
+      highlight: 1
+      default: 0
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+
+    built_in_css:
+      type: toggle
+      label: "Use built-in CSS"
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+
+    title:
+      type: toggle
+      label: "Title to insert in the Table of Contents"
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+
+    anchorlink:
+      type: toggle
+      label: "Show anchor links"
+      help: "Set to true to cause all headers to link to themselves."
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+
+    permalink:
+      type: toggle
+      label: "Add permalinks for headings"
+      help: "Set to true to generate permanent links at the beginning of each header"
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+
+    baselevel:
+      type: text
+      label: "Base level for headings"
+      default: 1
+      validate:
+        type: int
+        min: 1
+        max: 6
+
+    headinglevel:
+      type: text
+      label: "Maximum heading level to show in TOC/MINITOC"
+      default: 6
+      validate:
+        type: int
+        min: 1
+        max: 6
