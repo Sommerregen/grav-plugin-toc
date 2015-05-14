@@ -1,5 +1,5 @@
 name: "Toc"
-version: 1.0.0
+version: 1.1.0
 description: "This plugin automagically generates a (minified) Table of Contents based on special markers in the document and adds it into the resulting HTML document."
 icon: language
 author:
