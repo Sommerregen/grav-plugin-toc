@@ -267,7 +267,7 @@ class Toc
    * @param  array $list A list with headings
    * @return array       A flattened tree of the $list.
    */
-  protected function mapTree($list)
+  protected function mapTree(array $list)
   {
     static $indent = -1;
 
@@ -341,40 +341,101 @@ class Toc
 	 *
 	 * @return string             The converted attributes
 	 */
-	protected function htmlAttributes($attributes = [])
+	protected function htmlAttributes(array $attributes = [])
 	{
 		foreach ($attributes as $attribute => &$data) {
 			$data = implode(' ', (array) $data);
 			$data = $attribute.'="'.htmlspecialchars($data, ENT_QUOTES, 'UTF-8').'"';
 		}
-		return $attributes ? ' '. implode(' ', $attributes) : '';
+		return $attributes ? ' '.implode(' ', $attributes) : '';
 	}
 
   /**
    * Converts a word "into-it-s-hyphenated-version" (UTF-8 safe).
+   *
+   * A hyphenated word must begin with a letter ([A-Za-z]) and may be
+   * followed by any number of letters, digits ([0-9]), hyphens ("-"),
+   * underscores ("_"), colons (":"), and periods (".").
    *
    * @param  string $word Word to hyphenate
    * @return string       The hyphenated word
    */
 	protected function hyphenize($word)
 	{
-		$string = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE',$word);
-		$string = htmlspecialchars_decode($string);
+    // Set locale for transliterating Unicode text to plain ASCII text
+    $locale = setlocale(LC_CTYPE, 0);
+    setlocale(LC_CTYPE, 'en_US.UTF8');
 
-		// Character replacements
-		$string = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\1-\2', $string);
-		$string = preg_replace('/([a-zd])([A-Z])/', '\1-\2', $string);
+    // Ensure word is UTF-8 encoded
+    $text = html_entity_decode($word, ENT_COMPAT, 'UTF-8');
 
-		// REmove unwanted characters
-		$string = preg_replace('/(?:[\s_-]|\.)+/', '-', $string);
-		$string = preg_replace('/[^a-zA-Z0-9\-]/', '', $string);
+    // Replace non letter or digits by -
+    $text = preg_replace('~[^\\pL\d]+~u', '-', $text);
+    $text = preg_replace('~(\w)-s-~i', '$1s', $text);
 
-		// Remove duplicate dashes
-		$string = preg_replace('/(-)\1+/', '-', $string);
-		// Exception '&' (double-dash in github)
-		$string = preg_replace('/-&-/', '--', $string);
+    // Character replacements
+    $text = preg_replace('~([A-Z]+)([A-Z][a-z])~', '\1-\2', $text);
+    $text = preg_replace('~([a-z]{2,})([A-Z])~', '\1-\2', $text);
 
-		// Trim dashes from the beginning and end of string
-		return  strtolower(trim($string, '.-_ '));
+    // Trim
+    $text = trim($text, '-');
+
+    // Transliterate
+    $text = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $text);
+
+    // Lowercase
+    $text = strtolower($text);
+
+    // Remove unwanted characters and duplicate dashes
+    $text = preg_replace('~[^-\w]+~', '', $text);
+
+    // Trim dashes from the beginning and end of string
+    $text = trim($text, '.-_ ');
+
+    // Truncate string (hard-coded configurations)
+    $text = $this->truncate($text, $limit = 32);
+
+    // Provide default
+    if (empty($text)) {
+      return 'n-a';
+    }
+
+    // Restore locale
+    setlocale(LC_CTYPE, $locale);
+
+    // Return hyphenated word
+    return $text;
 	}
+
+  /**
+   * Truncates a string to a maximum length at word boundaries.
+   *
+   * @param  string  $string The string which should be truncated.
+   * @param  integer $limit  The maximum length the string should have
+   *                         after truncating.
+   * @param  string  $break  The break delimiter to divide the string
+   *                         into pieces of words.
+   * @param  string  $pad    Added to the end of the truncated string.
+   *
+   * @return string          The truncated string,
+   */
+  protected function truncate($string, $limit = 32, $break = '-', $pad = '-...')
+  {
+    $charset = 'UTF-8';
+    if (mb_strlen($string, $charset) > $limit) {
+      if (false !== ($breakpoint = strpos($string, $break, $limit))) {
+        if ($breakpoint < mb_strlen($string, $charset) - 1) {
+          $string = mb_substr($string, 0, $breakpoint, $charset);
+        }
+      } else {
+        // Truncate string to a maximum length
+        $string = substr($string, 0, $limit);
+      }
+
+      // Add truncate marker to the end of the string
+      $string = preg_replace('~(\w)[^\p{L}]?$~', "$1$pad", $string);
+    }
+
+    return $string;
+  }
 }

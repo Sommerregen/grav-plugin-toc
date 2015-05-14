@@ -73,7 +73,7 @@ class TocPlugin extends Plugin
       return;
     }
 
-    if ( $this->config->get('plugins.toc.enabled') ) {
+    if ($this->config->get('plugins.toc.enabled')) {
       // Initialize Toc class
       require_once(__DIR__.'/classes/Toc.php');
       $this->toc = new Toc();
