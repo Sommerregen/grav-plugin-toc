@@ -4,7 +4,7 @@
 
 ## About
 
-`Toc` is a plugin for [**Grav**](http://getgrav.org) used to generate Table of Contents from a Markdown document based on special markers. The markers are `[TOC]` and `[MINITOC]`, where the latter can be used for a (minified) Table of Contents (to give an overview of the current content of the section). By default, the Table of Contents links to the contents (`anchorlinks`) and adds visible permanent links (`permalinks`) to all headers. Further, all headers will automatically have unique id attributes generated based upon the text of the header. See how it looks like:
+`Toc` is a plugin for [**Grav**](http://getgrav.org) used to generate Table of Contents from a Markdown document based on special markers. The markers are `[TOC]` and `[MINITOC]`, where the latter can be used for a (minified) Table of Contents ( to give an overview of the current content of the section. By default, the Table of Contents links to the contents (`anchorlinks`) and adds visible permanent links (`permalinks`) to all headers. Further, all headers will automatically have unique id attributes generated based upon the text of the header. See how it looks like:
 
 ![Screenshot Toc Plugin](assets/screenshot.png "Toc Preview")
 
@@ -22,7 +22,7 @@ The `Toc` plugin comes with some sensible default configuration, that are pretty
 
 ### Config Defaults
 
-```
+```yaml
 # Global plugin configurations
 
 enabled: true                # Set to false to disable this plugin completely
@@ -42,14 +42,14 @@ If you need to change any value, then the best process is to copy the [toc.yaml]
 
 If you want to alter the settings for one or a few pages only, you can do so by adding page specific configurations into your page headers, e.g.
 
-```
+```yaml
 toc:
   permalink: false
 ```
 
 to disable permalinks or
 
-```
+```yaml
 toc: false
 ```
 

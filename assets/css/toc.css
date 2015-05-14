@@ -9,6 +9,7 @@
 	box-shadow: 0 0 5px 0 rgba(50, 50, 50, 0.4);
 	padding: 1em 2em;
 	min-width: 25%;
+	max-width: 25%;
 }
 .table-of-contents.toc {
 	float: right;
