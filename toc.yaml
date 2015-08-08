@@ -9,5 +9,10 @@ title: true                  # Title to insert in the Table of Contents
 anchorlink: true             # Set to true to cause all headers to link to themselves
 permalink: true              # Set to true to generate permanent links at the beginning of each header
 
+placement: "left"            # Either "left" or "right"
+visible: "hover"             # Active on "hover" or "always" visible
+icon:                        # Default link or a specific character like: #, ¶, ❡, and §.
+class:                       # Adds the provided class to the anchor html
+
 baselevel: 1                 # Base level for headings
 headinglevel: 6              # Maximum heading level to show in TOC

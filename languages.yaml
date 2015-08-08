@@ -1,0 +1,27 @@
+# German
+de:
+  PLUGINS:
+    TOC:
+      PATTERNS:
+        # Replace non letter or digits by -
+        '~\&~': 'und'
+        '~[^\p{L}\d]+~u': '-'
+
+        # Character replacements
+        '~([A-Z]+)([A-Z][a-z])~': '\1-\2'
+        '~([a-z]{2,})([A-Z])~': '\1-\2'
+
+# English
+en:
+  PLUGINS:
+    TOC:
+      PATTERNS:
+        # Replace non letter or digits by -
+        '~\&~': 'and'
+        '~[^\p{L}\d]+~u': '-'
+        '~(\w{4,})y\-s\-~i': '$1ies-'
+        '~(\w{4,})\-s\-~i': '$1s-'
+
+        # Character replacements
+        '~([A-Z]+)([A-Z][a-z])~': '\1-\2'
+        '~([a-z]{2,})([A-Z])~': '\1-\2'
