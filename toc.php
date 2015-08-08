@@ -1,6 +1,6 @@
 <?php
 /**
- * Toc v1.1.0
+ * Toc v1.2.0
  *
  * This plugin automagically generates a (minified) Table of Contents
  * based on special markers in the document and adds it into the
@@ -10,7 +10,7 @@
  * http://benjamin-regler.de/license/
  *
  * @package     Toc
- * @version     1.1.0
+ * @version     1.2.0
  * @link        <https://github.com/sommerregen/grav-plugin-external-links>
  * @author      Benjamin Regler <sommerregen@benjamin-regler.de>
  * @copyright   2015, Benjamin Regler

@@ -1,3 +1,21 @@
+# v1.2.0
+## 08/08/2015
+
+1. [](#new)
+  * Added admin configurations **(requires Grav 0.9.34+)**
+  * Added multi-language support **(requires Grav 0.9.33+)**
+  * Added `placement`, `visible`, `icon` and `class` option to customize anchor look
+  * Added buitlin CSS class to suppress anchor links with the `no-anchor` class
+  * Added `{{% toc %}}` shortcode
+2. [](#improved)
+  * Switched to `onBuildPagesInitialized` event **(requires Grav 0.9.29+)**
+  * Improved and use language translation for language specific slug generation (**requires Grav 0.9.34+**)
+  * Updated `README.md`
+3. [](#bugfix)
+  * Strip tags in title attribute
+  * Normalize tags in TOC (see `<code>` element)
+  * Ignore empty headings
+
 # v1.1.0
 ## 05/14/2015
 
