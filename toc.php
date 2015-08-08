@@ -6,25 +6,25 @@
  * based on special markers in the document and adds it into the
  * resulting HTML document.
  *
- * Licensed under MIT, see LICENSE.
+ * Dual licensed under the MIT or GPL Version 3 licenses, see LICENSE.
+ * http://benjamin-regler.de/license/
  *
  * @package     Toc
  * @version     1.1.0
  * @link        <https://github.com/sommerregen/grav-plugin-external-links>
  * @author      Benjamin Regler <sommerregen@benjamin-regler.de>
  * @copyright   2015, Benjamin Regler
- * @license     <http://opensource.org/licenses/MIT>            MIT
+ * @license     <http://opensource.org/licenses/MIT>        MIT
+ * @license     <http://opensource.org/licenses/GPL-3.0>    GPLv3
  */
 
 namespace Grav\Plugin;
 
-use Grav\Common\Grav;
 use Grav\Common\Plugin;
 use Grav\Common\Data\Data;
 use Grav\Common\Page\Page;
+use Grav\Plugin\Shortcodes;
 use RocketTheme\Toolbox\Event\Event;
-
-use Grav\Plugin\Toc\Toc;
 
 /**
  * Toc
@@ -45,7 +45,7 @@ class TocPlugin extends Plugin
    *
    * @var object
    */
-  protected $toc;
+  protected $backend;
 
   /** -------------
    * Public methods
@@ -58,52 +58,32 @@ class TocPlugin extends Plugin
    * @return array    The list of events of the plugin of the form
    *                      'name' => ['method_name', priority].
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents()
+  {
     return [
-      'onPluginsInitialized' => ['onPluginsInitialized', 0],
+      'onTwigInitialized' => ['onTwigInitialized', 0],
+      'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0],
+      'onBuildPagesInitialized' => ['onBuildPagesInitialized', 0],
+      'onShortcodesInitialized' => ['onShortcodesInitialized', 0]
     ];
   }
-
   /**
    * Initialize configuration.
    */
-  public function onPluginsInitialized() {
+  public function onBuildPagesInitialized()
+  {
     if ($this->isAdmin()) {
       $this->active = false;
       return;
     }
 
     if ($this->config->get('plugins.toc.enabled')) {
-      // Initialize Toc class
-      require_once(__DIR__.'/classes/Toc.php');
-      $this->toc = new Toc();
+      $this->init();
 
       $this->enable([
-        'onPageContentProcessed' => ['onPageContentProcessed', 0],
-        'onTwigInitialized' => ['onTwigInitialized', 0],
-        'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0],
-        'onTwigSiteVariables' => ['onTwigSiteVariables', 0],
+        'onPageContentProcessed' => ['onPageContentProcessed', 0]
       ]);
     }
-  }
-
-  /**
-   * Initialize Twig configuration and filters.
-   */
-  public function onTwigInitialized()
-  {
-    // Expose tocFilter
-    $this->grav['twig']->twig()->addFilter(
-      new \Twig_SimpleFilter('toc', [$this, 'TocFilter'], ['is_safe' => ['html']])
-    );
-  }
-
-  /**
-   * Add current directory to Twig lookup paths.
-   */
-  public function onTwigTemplatePaths()
-  {
-    $this->grav['twig']->twig_paths[] = __DIR__ . '/templates';
   }
 
   /**
@@ -124,6 +104,25 @@ class TocPlugin extends Plugin
       $content = $page->getRawContent();
       $page->setRawContent($this->tocFilter($content));
     }
+  }
+
+  /**
+   * Initialize Twig configuration and filters.
+   */
+  public function onTwigInitialized()
+  {
+    // Expose tocFilter
+    $this->grav['twig']->twig()->addFilter(
+      new \Twig_SimpleFilter('toc', [$this, 'tocFilter'], ['is_safe' => ['html']])
+    );
+  }
+
+  /**
+   * Add current directory to Twig lookup paths.
+   */
+  public function onTwigTemplatePaths()
+  {
+    $this->grav['twig']->twig_paths[] = __DIR__ . '/templates';
   }
 
   /**
@@ -151,7 +150,38 @@ class TocPlugin extends Plugin
     $config = $this->mergeConfig($this->grav['page'], $params);
 
     // Process content (apply TOC filter)
-    return $this->toc->process($content, $config);
+    return $this->init()->process($content, $config);
+  }
+
+  /**
+   * Register {{% toc %}}, {{% minitoc %}} and {{% tocify %}} shortcodes.
+   *
+   * @param  Event  $event An event object.
+   */
+  public function onShortcodesInitialized(Event $event)
+  {
+    $backend = $this->init();
+    $function = function($event) {
+      $this->enable([
+        'onPageContentProcessed' => ['onPageContentProcessed', 0]
+      ]);
+
+        // Update header to variable to bypass evaluation
+      if (isset($event['page']->header()->toc->enabled)) {
+        $event['page']->header()->toc->enabled = true;
+      }
+
+      return '['.strtoupper($event['tag']).']';
+    };
+
+    $shortcodes = [
+      new Shortcodes\InlineShortcode('toc', $function),
+      new Shortcodes\InlineShortcode('minitoc', $function),
+      // new Shortcodes\BlockShortcode('tocify', [$backend, 'tocifyShortcode'])
+    ];
+
+    // Register {{% toc %}}, {{% minitoc %}} and {{% tocify %}} shortcode
+    $event['shortcodes']->register($shortcodes);
   }
 
   /** -------------------------------
@@ -191,5 +221,25 @@ class TocPlugin extends Plugin
 
     // Return modified config
     return $config;
+  }
+
+  /**
+   * Initialize plugin and all dependencies.
+   *
+   * @return \Grav\Plugin\ExternalLinks   Returns ExternalLinks instance.
+   */
+  protected function init()
+  {
+    if (!$this->backend) {
+      // Initialize Toc class
+      require_once(__DIR__ . '/classes/Toc.php');
+      $this->backend = new Toc();
+
+      $this->enable([
+        'onTwigSiteVariables' => ['onTwigSiteVariables', 0]
+      ]);
+    }
+
+    return $this->backend;
   }
 }

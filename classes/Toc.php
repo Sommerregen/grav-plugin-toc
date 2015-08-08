@@ -2,17 +2,17 @@
 /**
  * Toc
  *
- * Helper class to automagically generatea a (minified) Table of Contents
- * based on special markers in the document and adds it into the
- * resulting HTML document.
+ * This file is part of Grav Toc plugin.
  *
- * Licensed under MIT, see LICENSE.
+ * Dual licensed under the MIT or GPL Version 3 licenses, see LICENSE.
+ * http://benjamin-regler.de/license/
  */
 
-namespace Grav\Plugin\Toc;
+namespace Grav\Plugin;
 
 use Grav\Common\Grav;
 use Grav\Common\GravTrait;
+use RocketTheme\Toolbox\Event\Event;
 
 /**
  * Toc
@@ -28,6 +28,13 @@ class Toc
    */
 	use GravTrait;
 
+  /**
+   * Current language of the document
+   *
+   * @var string
+   */
+  protected $language;
+
 	/** ---------------------------
    * Private/protected properties
    * ----------------------------
@@ -40,11 +47,10 @@ class Toc
 	 *
 	 * @var string
 	 */
-  protected $regex = '~
-  	<(?P<tag>pre|code|blockquote|q|cite|h\d+)\s*(?P<attr>[^>]*)>
-  		(?P<text>.*?)
-  	</\1>
-  ~imxs';
+  protected $regex = [
+    'html' => '~<(?P<tag>pre|code|blockquote|q|cite|h\d+)\s*(?P<attr>[^>]*)>(?P<text>.*?)</\1>~ims',
+    'markdown' => "~^(?P<tag>\#{1,6})?[ ]*(?P<text>.+?)(?(1)\#*|[ ]*\n(=+|-+)[ ]*)\n+~m"
+  ];
 
   /** -------------
    * Public methods
@@ -62,24 +68,29 @@ class Toc
    *                            'text' => ..., 'id' => ...
    *                          ]
    */
-  public function createToc($content)
+  public function createToc($content, $origin = 'html')
   {
   	$toc = [];
     $counter = [];
 
-    if (preg_match_all($this->regex, $content, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER)) {
+    if (preg_match_all($this->regex[$origin], $content, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER)) {
     	foreach ($matches as $match) {
         $offset = $match[0][1];
         $tag = strtolower($match['tag'][0]);
 
-	    	// Don't consider headings in code or pre or blockquote environments
-	    	if ($tag{0} !== 'h') {
+        if ($origin == 'markdown') {
+          $tag = 'h'.strlen($tag);
+        // Don't consider headings in code or pre or blockquote environments
+        } elseif ($tag{0} !== 'h') {
 	    		continue;
 	    	}
 
 	    	// Extract informations from HTML tags
 	    	$level = (int) mb_substr($tag, 1);
 	    	$text = trim($match['text'][0]);
+        if (empty($text)) {
+          continue;
+        }
 
         // Expand tag attributes
         $attributes = $this->parseAttributes($match['attr'][0]);
@@ -126,7 +137,7 @@ class Toc
   public function tocify($content, $options = [])
   {
   	// Change regex, i.e. allow headers in (block-)quotes being parsed
-  	$regex = str_replace('blockquote|q|cite|', '', $this->regex);
+  	$regex = str_replace('blockquote|q|cite|', '', $this->regex['html']);
 
   	$counter = [];
   	$content = preg_replace_callback($regex,
@@ -161,8 +172,23 @@ class Toc
 
 	    	// Add permalink
 	    	if ($options->get('permalink')) {
-	    		$text = sprintf('<a class="headeranchor-link" aria-hidden="true" href="#%s" name="%1$s" title="Permanent link: %2$s">%2$s</a>',
-            $id, $text);
+          // Compile custom configurations for header link
+          $extra = ' ';
+          if ('left' !== ($placement = $options->get('placement', ' '))) {
+            $extra .= 'headeranchor-link-' . $placement . ' ';
+          }
+          if ('hover' !== ($visible = $options->get('visible', ' '))) {
+            $extra .= 'headeranchor-visible-' . $visible . ' ';
+          }
+          $extra .= implode(' ', [
+            $options->get('hover', ''),
+            implode(' ', $options->get('class', []))]);
+
+          // Load header anchor link icon
+          $icon = $options->get('icon', '#');
+
+	    		$text = sprintf('<a class="headeranchor-link%4$s" aria-hidden="true" href="#%s" name="%1$s" title="Permanent link: %2$s" data-icon="%5$s">%3$s</a>',
+            $id, strip_tags($text), $text, rtrim($extra), $icon);
 	    	}
 
 	    	// Add id attribute if permalinks or anchorlinks are used
@@ -195,6 +221,10 @@ class Toc
   {
   	/** @var Twig $twig */
     $twig = self::getGrav()['twig'];
+
+    /** @var @var \Grav\Common\Page\Page $page */
+    $page = self::getGrav()['page'];
+    $this->language = $page->language() ? [$page->language()] : null;
 
     $replacements = [];
     // Find all occurrences of TOC and MINITOC in content
@@ -244,6 +274,7 @@ class Toc
 
     // Tocify content
     $content = $this->tocify($content, $options);
+    $this->language = null;
 
     // Replace TOC and MINITOC placeholders
     $content = preg_replace_callback($regex,
@@ -270,6 +301,10 @@ class Toc
   protected function mapTree(array $list)
   {
     static $indent = -1;
+
+    if (empty($list)) {
+      return $list;
+    }
 
     // Adjust TOC indentation based on baselevel
     $baselevel = min(array_map(function($elem) {
@@ -357,10 +392,12 @@ class Toc
    * followed by any number of letters, digits ([0-9]), hyphens ("-"),
    * underscores ("_"), colons (":"), and periods (".").
    *
-   * @param  string $word Word to hyphenate
-   * @return string       The hyphenated word
+   * @param  string $word     Word to hyphenate
+   * @param  array  $language A language code used to convert the word.
+   *
+   * @return string           The hyphenated word
    */
-	protected function hyphenize($word)
+	protected function hyphenize($word, $language = null)
 	{
     // Set locale for transliterating Unicode text to plain ASCII text
     $locale = setlocale(LC_CTYPE, 0);
@@ -369,13 +406,13 @@ class Toc
     // Ensure word is UTF-8 encoded
     $text = html_entity_decode($word, ENT_COMPAT, 'UTF-8');
 
-    // Replace non letter or digits by -
-    $text = preg_replace('~[^\\pL\d]+~u', '-', $text);
-    $text = preg_replace('~(\w)-s-~i', '$1s', $text);
+    // Strip tags
+    $text = strip_tags($text);
 
-    // Character replacements
-    $text = preg_replace('~([A-Z]+)([A-Z][a-z])~', '\1-\2', $text);
-    $text = preg_replace('~([a-z]{2,})([A-Z])~', '\1-\2', $text);
+    // Perform some language dependent replacements
+    $lang = $language ? [$language]: $this->language;
+    $replacements = self::getGrav()['language']->translate('PLUGINS.TOC.PATTERNS', $lang, true);
+    $text = preg_replace(array_keys($replacements), $replacements, $text);
 
     // Trim
     $text = trim($text, '-');
