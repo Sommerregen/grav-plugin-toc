@@ -3,7 +3,9 @@
 
 2. [](#improved)
   * Added blueprints for Grav Admin plugin
+  * Document PHP iconv Requirement [#1](https://github.com/Sommerregen/grav-plugin-toc/issues/1)
 3. [](#bugfix)
+  * Fixed [#2](https://github.com/Sommerregen/grav-plugin-toc/issues/2) (Not working with Grav's Admin Panel)
   * Fixed broken TOC after caching pages
 
 # v1.2.0
