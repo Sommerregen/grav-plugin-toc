@@ -1,3 +1,11 @@
+# v1.2.1
+## 09/09/2015
+
+2. [](#improved)
+  * Added blueprints for Grav Admin plugin
+3. [](#bugfix)
+  * Fixed broken TOC after caching pages
+
 # v1.2.0
 ## 08/08/2015
 
