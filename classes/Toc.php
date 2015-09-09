@@ -418,7 +418,11 @@ class Toc
     $text = trim($text, '-');
 
     // Transliterate
-    $text = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $text);
+    if (function_exists('iconv')) {
+      $text = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $text);
+    } else {
+      $text = mb_convert_encoding($text, 'UTF-8', 'ISO-8859-15');
+    }
 
     // Lowercase
     $text = strtolower($text);
