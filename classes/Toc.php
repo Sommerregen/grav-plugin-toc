@@ -23,10 +23,10 @@ use RocketTheme\Toolbox\Event\Event;
  */
 class Toc
 {
-	/**
+  /**
    * @var Toc
    */
-	use GravTrait;
+  use GravTrait;
 
   /**
    * Current language of the document
@@ -35,18 +35,18 @@ class Toc
    */
   protected $language;
 
-	/** ---------------------------
+  /** ---------------------------
    * Private/protected properties
    * ----------------------------
    */
 
-	/**
-	 * Regex for Markdown (setext-style and atx-style headers):
-	 *   ~^(?P<hashes>\#{1,6})?[ ]*
-	 *   		(?P<heading>.+?)(?(1)\#*|[ ]*\n(=+|-+)[ ]*)\n+~m';
-	 *
-	 * @var string
-	 */
+  /**
+   * Regex for Markdown (setext-style and atx-style headers):
+   *   ~^(?P<hashes>\#{1,6})?[ ]*
+   *       (?P<heading>.+?)(?(1)\#*|[ ]*\n(=+|-+)[ ]*)\n+~m';
+   *
+   * @var string
+   */
   protected $regex = [
     'html' => '~<(?P<tag>pre|code|blockquote|q|cite|h\d+)\s*(?P<attr>[^>]*)>(?P<text>.*?)</\1>~ims',
     'markdown' => "~^(?P<tag>\#{1,6})?[ ]*(?P<text>.+?)(?(1)\#*|[ ]*\n(=+|-+)[ ]*)\n+~m"
@@ -70,11 +70,11 @@ class Toc
    */
   public function createToc($content, $origin = 'html')
   {
-  	$toc = [];
+    $toc = [];
     $counter = [];
 
     if (preg_match_all($this->regex[$origin], $content, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER)) {
-    	foreach ($matches as $match) {
+      foreach ($matches as $match) {
         $offset = $match[0][1];
         $tag = strtolower($match['tag'][0]);
 
@@ -82,12 +82,12 @@ class Toc
           $tag = 'h'.strlen($tag);
         // Don't consider headings in code or pre or blockquote environments
         } elseif ($tag{0} !== 'h') {
-	    		continue;
-	    	}
+          continue;
+        }
 
-	    	// Extract informations from HTML tags
-	    	$level = (int) mb_substr($tag, 1);
-	    	$text = trim($match['text'][0]);
+        // Extract informations from HTML tags
+        $level = (int) mb_substr($tag, 1);
+        $text = trim($match['text'][0]);
         if (empty($text)) {
           continue;
         }
@@ -101,25 +101,25 @@ class Toc
           $id = substr(md5($text), 0, 6);
         }
 
-	    	if (isset($counter[$id])) {
-	    		$id = $id.'-'.$counter[$id]++;
-	    	} else {
-	    		$counter[$id] = 1;
-	    	}
+        if (isset($counter[$id])) {
+          $id = $id.'-'.$counter[$id]++;
+        } else {
+          $counter[$id] = 1;
+        }
 
-	    	// Prevent TOC and MINITOC insertion in headings
-	    	$text = str_ireplace(['[TOC]', '[MINITOC]'],
-	    		['&#91;TOC&#93;', '&#91;MINITOC&#93;'], $text);
+        // Prevent TOC and MINITOC insertion in headings
+        $text = str_ireplace(['[TOC]', '[MINITOC]'],
+          ['&#91;TOC&#93;', '&#91;MINITOC&#93;'], $text);
 
-	    	$toc[$offset] = [
-	    		'tag' => $tag,
-	    		'level' => $level,
+        $toc[$offset] = [
+          'tag' => $tag,
+          'level' => $level,
           'indent' => $level - 1,
-	    		'text' => $text,
-	    		'id' => $id,
-	    	];
-	    }
-	  }
+          'text' => $text,
+          'id' => $id,
+        ];
+      }
+    }
 
     // Create tree of headings and their levels
     return $this->mapTree($toc);
@@ -136,23 +136,23 @@ class Toc
    */
   public function tocify($content, $options = [])
   {
-  	// Change regex, i.e. allow headers in (block-)quotes being parsed
-  	$regex = str_replace('blockquote|q|cite|', '', $this->regex['html']);
+    // Change regex, i.e. allow headers in (block-)quotes being parsed
+    $regex = str_replace('blockquote|q|cite|', '', $this->regex['html']);
 
-  	$counter = [];
-  	$content = preg_replace_callback($regex,
-  		function($match) use ($options, &$counter) {
-  			$tag = strtolower($match['tag']);
-  			$text = trim($match['text']);
+    $counter = [];
+    $content = preg_replace_callback($regex,
+      function($match) use ($options, &$counter) {
+        $tag = strtolower($match['tag']);
+        $text = trim($match['text']);
 
         // Don't consider headings in code or pre environments
-	    	if (($tag{0} !== 'h') || (mb_strlen($text) == 0)) {
-	    		// Ignore empty headers, too
-	    		return $match[0];
-	    	}
+        if (($tag{0} !== 'h') || (mb_strlen($text) == 0)) {
+          // Ignore empty headers, too
+          return $match[0];
+        }
 
-	    	// Extract informations from HTML tags
-	    	$level = $indent = (int) mb_substr($tag, 1);
+        // Extract informations from HTML tags
+        $level = $indent = (int) mb_substr($tag, 1);
 
         // Expand tag attributes
         $attributes = $this->parseAttributes($match['attr']);
@@ -163,15 +163,15 @@ class Toc
           $id = substr(md5($text), 0, 6);
         }
 
-	    	// Increment counter on same heading names
-	    	if (isset($counter[$id])) {
-	    		$id = $id.'-'.$counter[$id]++;
-	    	} else {
-	    		$counter[$id] = 1;
-	    	}
+        // Increment counter on same heading names
+        if (isset($counter[$id])) {
+          $id = $id.'-'.$counter[$id]++;
+        } else {
+          $counter[$id] = 1;
+        }
 
-	    	// Add permalink
-	    	if ($options->get('permalink')) {
+        // Add permalink
+        if ($options->get('permalink')) {
           // Compile custom configurations for header link
           $extra = ' ';
           if ('left' !== ($placement = $options->get('placement', ' '))) {
@@ -187,26 +187,26 @@ class Toc
           // Load header anchor link icon
           $icon = $options->get('icon', '#');
 
-	    		$text = sprintf('<a class="headeranchor-link%4$s" aria-hidden="true" href="#%s" name="%1$s" title="Permanent link: %2$s" data-icon="%5$s">%3$s</a>',
+          $text = sprintf('<a class="headeranchor-link%4$s" aria-hidden="true" href="#%s" name="%1$s" title="Permanent link: %2$s" data-icon="%5$s">%3$s</a>',
             $id, strip_tags($text), $text, rtrim($extra), $icon);
-	    	}
+        }
 
-	    	// Add id attribute if permalinks or anchorlinks are used
-	    	$link = $options->get('anchorlink', $options->get('permalink'));
+        // Add id attribute if permalinks or anchorlinks are used
+        $link = $options->get('anchorlink', $options->get('permalink'));
         $attributes += $link ? ['id' => $id] : [];
 
-	    	// Prevent TOC and MINITOC insertion in headings
-	    	$text = str_ireplace(['[TOC]', '[MINITOC]'],
-	    		['&#91;TOC&#93;', '&#91;MINITOC&#93;'], $text);
+        // Prevent TOC and MINITOC insertion in headings
+        $text = str_ireplace(['[TOC]', '[MINITOC]'],
+          ['&#91;TOC&#93;', '&#91;MINITOC&#93;'], $text);
 
-	    	// Stringify HTML attributes
+        // Stringify HTML attributes
         $attributes = $this->htmlAttributes($attributes);
 
-	    	// Return tag with its text content
+        // Return tag with its text content
         return "<$tag$attributes>$text</$tag>";
-  	}, $content);
+    }, $content);
 
-		return $content;
+    return $content;
   }
 
   /**
@@ -219,7 +219,7 @@ class Toc
    */
   public function process($content, $options = [])
   {
-  	/** @var Twig $twig */
+    /** @var Twig $twig */
     $twig = self::getGrav()['twig'];
 
     /** @var @var \Grav\Common\Page\Page $page */
@@ -230,8 +230,8 @@ class Toc
     // Find all occurrences of TOC and MINITOC in content
     $regex = '~(<p>)?\s*\[(?P<type>(?:MINI)?TOC)\]\s*(?(1)</p>)~i';
     if (preg_match_all($regex, $content, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER)) {
-    	// Generate TOC
-   		$toc = $this->createToc($content);
+      // Generate TOC
+       $toc = $this->createToc($content);
       foreach ($matches as $match) {
         $offset = $match[0][1];
         $type = strtolower($match['type'][0]);
@@ -348,42 +348,42 @@ class Toc
    */
   protected function parseAttributes($text)
   {
-  	$attributes = [];
-  	$pattern = '~(?(DEFINE)
-	  		(?<name>[a-zA-Z][a-zA-Z0-9-:]*)
-	  		(?<value_double>"[^"]+")
-	  		(?<value_single>\'[^\']+\')
-	  		(?<value_none>[^\s>]+)
-	  		(?<value>((?&value_double)|(?&value_single)|(?&value_none)))
-	  	)
-			(?<n>(?&name))(=(?<v>(?&value)))?~xs';
+    $attributes = [];
+    $pattern = '~(?(DEFINE)
+        (?<name>[a-zA-Z][a-zA-Z0-9-:]*)
+        (?<value_double>"[^"]+")
+        (?<value_single>\'[^\']+\')
+        (?<value_none>[^\s>]+)
+        (?<value>((?&value_double)|(?&value_single)|(?&value_none)))
+      )
+      (?<n>(?&name))(=(?<v>(?&value)))?~xs';
 
-		if (preg_match_all($pattern, $text, $matches, PREG_SET_ORDER)) {
-			foreach ($matches as $match) {
-				$attributes[$match['n']] = isset($match['v'])
-					? trim($match['v'], '\'"')
-					: null;
-			}
-		}
-		return $attributes;
-	}
+    if (preg_match_all($pattern, $text, $matches, PREG_SET_ORDER)) {
+      foreach ($matches as $match) {
+        $attributes[$match['n']] = isset($match['v'])
+          ? trim($match['v'], '\'"')
+          : null;
+      }
+    }
+    return $attributes;
+  }
 
-	/**
-	 * Convert an array of attributes into its HTML representation.
-	 *
-	 * @param  array  $attributes The attributes to be converted to a
-	 *                            HTML string
-	 *
-	 * @return string             The converted attributes
-	 */
-	protected function htmlAttributes(array $attributes = [])
-	{
-		foreach ($attributes as $attribute => &$data) {
-			$data = implode(' ', (array) $data);
-			$data = $attribute.'="'.htmlspecialchars($data, ENT_QUOTES, 'UTF-8').'"';
-		}
-		return $attributes ? ' '.implode(' ', $attributes) : '';
-	}
+  /**
+   * Convert an array of attributes into its HTML representation.
+   *
+   * @param  array  $attributes The attributes to be converted to a
+   *                            HTML string
+   *
+   * @return string             The converted attributes
+   */
+  protected function htmlAttributes(array $attributes = [])
+  {
+    foreach ($attributes as $attribute => &$data) {
+      $data = implode(' ', (array) $data);
+      $data = $attribute.'="'.htmlspecialchars($data, ENT_QUOTES, 'UTF-8').'"';
+    }
+    return $attributes ? ' '.implode(' ', $attributes) : '';
+  }
 
   /**
    * Converts a word "into-it-s-hyphenated-version" (UTF-8 safe).
@@ -397,8 +397,8 @@ class Toc
    *
    * @return string           The hyphenated word
    */
-	protected function hyphenize($word, $language = null)
-	{
+  protected function hyphenize($word, $language = null)
+  {
     // Set locale for transliterating Unicode text to plain ASCII text
     $locale = setlocale(LC_CTYPE, 0);
     setlocale(LC_CTYPE, 'en_US.UTF8');
@@ -442,7 +442,7 @@ class Toc
 
     // Return hyphenated word
     return $text;
-	}
+  }
 
   /**
    * Truncates a string to a maximum length at word boundaries.
