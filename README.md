@@ -24,7 +24,7 @@
 
 Installing or updating the `Toc` plugin can be done in one of two ways. Using the GPM (Grav Package Manager) installation update method (i.e. `bin/gpm install toc`) or manual install by downloading [this plugin](https://github.com/sommerregen/grav-plugin-toc) and extracting all plugin files to
 
-	user/plugins/toc
+    user/plugins/toc
 
 For more informations, please check the [Installation and update guide](docs/INSTALL.md).
 

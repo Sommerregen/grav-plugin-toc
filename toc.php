@@ -1,6 +1,6 @@
 <?php
 /**
- * Toc v1.2.0
+ * Toc v1.2.1
  *
  * This plugin automagically generates a (minified) Table of Contents
  * based on special markers in the document and adds it into the
@@ -10,7 +10,7 @@
  * http://benjamin-regler.de/license/
  *
  * @package     Toc
- * @version     1.2.0
+ * @version     1.2.1
  * @link        <https://github.com/sommerregen/grav-plugin-external-links>
  * @author      Benjamin Regler <sommerregen@benjamin-regler.de>
  * @copyright   2015, Benjamin Regler
@@ -45,7 +45,7 @@ class TocPlugin extends Plugin
    *
    * @var object
    */
-  protected $backend;
+  protected $toc;
 
   /** -------------
    * Public methods
@@ -63,14 +63,14 @@ class TocPlugin extends Plugin
     return [
       'onTwigInitialized' => ['onTwigInitialized', 0],
       'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0],
-      'onBuildPagesInitialized' => ['onBuildPagesInitialized', 0],
+      'onPageInitialized' => ['onPageInitialized', 0],
       'onShortcodesInitialized' => ['onShortcodesInitialized', 0]
     ];
   }
   /**
    * Initialize configuration.
    */
-  public function onBuildPagesInitialized()
+  public function onPageInitialized()
   {
     if ($this->isAdmin()) {
       $this->active = false;
@@ -78,10 +78,9 @@ class TocPlugin extends Plugin
     }
 
     if ($this->config->get('plugins.toc.enabled')) {
-      $this->init();
-
       $this->enable([
-        'onPageContentProcessed' => ['onPageContentProcessed', 0]
+        'onPageContentProcessed' => ['onPageContentProcessed', 0],
+        'onTwigSiteVariables' => ['onTwigSiteVariables', 0]
       ]);
     }
   }
@@ -99,7 +98,7 @@ class TocPlugin extends Plugin
     $page = $event['page'];
 
     $config = $this->mergeConfig($page);
-    if ($config->get('enabled', false)) {
+    if ($config->get('enabled')) {
       // Get content, apply TocFilter and save modified page content
       $content = $page->getRawContent();
       $page->setRawContent($this->tocFilter($content));
@@ -160,7 +159,7 @@ class TocPlugin extends Plugin
    */
   public function onShortcodesInitialized(Event $event)
   {
-    $backend = $this->init();
+    $toc = $this->init();
     $function = function($event) {
       $this->enable([
         'onPageContentProcessed' => ['onPageContentProcessed', 0]
@@ -177,7 +176,7 @@ class TocPlugin extends Plugin
     $shortcodes = [
       new Shortcodes\InlineShortcode('toc', $function),
       new Shortcodes\InlineShortcode('minitoc', $function),
-      // new Shortcodes\BlockShortcode('tocify', [$backend, 'tocifyShortcode'])
+      // new Shortcodes\BlockShortcode('tocify', [$toc, 'tocifyShortcode'])
     ];
 
     // Register {{% toc %}}, {{% minitoc %}} and {{% tocify %}} shortcode
@@ -230,16 +229,16 @@ class TocPlugin extends Plugin
    */
   protected function init()
   {
-    if (!$this->backend) {
+    if (!$this->toc) {
       // Initialize Toc class
       require_once(__DIR__ . '/classes/Toc.php');
-      $this->backend = new Toc();
+      $this->toc = new Toc();
 
       $this->enable([
         'onTwigSiteVariables' => ['onTwigSiteVariables', 0]
       ]);
     }
 
-    return $this->backend;
+    return $this->toc;
   }
 }

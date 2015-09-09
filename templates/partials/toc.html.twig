@@ -1,56 +1,56 @@
 {# Render table of contents block #}
 <nav class="table-of-contents {{ toc.type }}" role="navigation">
-	{% if toc.title %}
-		{# Format header according to TOC type #}
-		{% if toc.type == "toc" %}
-			<span class="toctitle">Table of contents:</span>
-		{% elseif toc.type == "minitoc" %}
-			<span class="toctitle">Overview:</span>
-		{% endif %}
-	{% endif %}
+  {% if toc.title %}
+    {# Format header according to TOC type #}
+    {% if toc.type == "toc" %}
+      <span class="toctitle">Table of contents:</span>
+    {% elseif toc.type == "minitoc" %}
+      <span class="toctitle">Overview:</span>
+    {% endif %}
+  {% endif %}
 
-	{# Get base indentation based on config settings #}
-	{% set base_indent = toc.headinglevel %}
-	{% for entry in toc.list if (toc.baselevel <= entry.level) and (entry.level <= toc.headinglevel) %}
-		{% if entry.indent < base_indent %}
-			{% set base_indent = entry.indent %}
-		{% endif %}
-	{% endfor %}
+  {# Get base indentation based on config settings #}
+  {% set base_indent = toc.headinglevel %}
+  {% for entry in toc.list if (toc.baselevel <= entry.level) and (entry.level <= toc.headinglevel) %}
+    {% if entry.indent < base_indent %}
+      {% set base_indent = entry.indent %}
+    {% endif %}
+  {% endfor %}
 
-	<ul>
-	{# Generate links #}
-	{% set level = base_indent %}
-	{% for entry in toc.list if (toc.baselevel <= entry.level) and (entry.level <= toc.headinglevel) %}
+  <ul>
+  {# Generate links #}
+  {% set level = base_indent %}
+  {% for entry in toc.list if (toc.baselevel <= entry.level) and (entry.level <= toc.headinglevel) %}
 
-		{# Create list markup for headings #}
-		{% if entry.indent > level %}
-			{% for i in 1..(entry.indent - level) %}
-				<li><ul>
-			{% endfor %}
-		{% elseif entry.indent < level %}
-			{% for i in 1..(level - entry.indent) %}
-				</ul></li>
-			{% endfor %}
-		{% endif %}
+    {# Create list markup for headings #}
+    {% if entry.indent > level %}
+      {% for i in 1..(entry.indent - level) %}
+        <li><ul>
+      {% endfor %}
+    {% elseif entry.indent < level %}
+      {% for i in 1..(level - entry.indent) %}
+        </ul></li>
+      {% endfor %}
+    {% endif %}
 
-		{# Set current level to heading level #}
-		{% set level = entry.indent %}
+    {# Set current level to heading level #}
+    {% set level = entry.indent %}
 
-		{# Show TOC link based on anchorlinks option #}
-		{% if toc.anchorlink %}
-			<li><a href="#{{ entry.id }}" class="toclink" title="{{ entry.text }}">{{ entry.text|truncate(32, " ") }}</a></li>
-		{% else %}
-			<li><span class="toclink">{{ entry.text|truncate(32, " ") }}</span></li>
-		{% endif %}
-	{% endfor %}
+    {# Show TOC link based on anchorlinks option #}
+    {% if toc.anchorlink %}
+      <li><a href="#{{ entry.id }}" class="toclink" title="{{ entry.text }}">{{ entry.text|truncate(32, " ") }}</a></li>
+    {% else %}
+      <li><span class="toclink">{{ entry.text|truncate(32, " ") }}</span></li>
+    {% endif %}
+  {% endfor %}
 
-	{# Add missing closing tags #}
-	{% if (level - base_indent) > 0 %}
-		{% for i in 1..(level - base_indent) %}
-			</ul></li>
-		{% endfor %}
-	{% endif %}
+  {# Add missing closing tags #}
+  {% if (level - base_indent) > 0 %}
+    {% for i in 1..(level - base_indent) %}
+      </ul></li>
+    {% endfor %}
+  {% endif %}
 
-	</ul>
+  </ul>
 </nav>
 
