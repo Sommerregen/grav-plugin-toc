@@ -1,3 +1,14 @@
+# v1.3.0
+## 09/24/2015
+
+1. [](#new)
+  * Added more blueprints for Grav Admin plugin
+2. [](#improved)
+  * Added configuration options for slug generation [#4](https://github.com/Sommerregen/grav-plugin-toc/issues/4)
+  * Added better fallback for slug generation when `iconv` module is not installed on the server
+3. [](#bugfix)
+  * Fixed [#3](https://github.com/Sommerregen/grav-plugin-toc/issues/3) (Twig filter not working in twig template)
+
 # v1.2.1
 ## 09/09/2015
 

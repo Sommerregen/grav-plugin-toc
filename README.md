@@ -16,8 +16,6 @@
 
 ## About
 
-> This plugin needs the [PHP iconv module](http://php.net/manual/en/function.iconv.php) in order to properly convert UTF-8 titles into human readable slugs.
-
 `Toc` is a plugin for [**Grav**](http://getgrav.org) used to generate Table of Contents from a Markdown document based on special markers. The markers are `[TOC]` and `[MINITOC]`, where the latter can be used for a (minified) Table of Contents to give an overview of the current content of the section. By default, the Table of Contents links to the contents (`anchorlinks`) and adds visible permanent links (`permalinks`) to all headers. Further, all headers will automatically have unique id attributes generated based upon the text of the header. See how it looks like:
 
 ![Screenshot Toc Plugin](assets/screenshot.png "Toc Preview")
@@ -55,6 +53,14 @@ class:                       # Adds the provided class to the anchor html
 
 baselevel: 1                 # Base level for headings
 headinglevel: 6              # Maximum heading level to show in TOC
+
+slug:                        # Slug generation
+  truncate: true             # Truncate headings for slug generation
+  length: 32                 # Slug string length
+  break: "-"                 # The break delimiter to divide the slug into pieces of words.
+  pad: "-..."                # Added to the end of the truncated slug
+
+process: true                # Process table of contents
 ```
 
 If you need to change any value, then the best process is to copy the [toc.yaml](toc.yaml) file into your `users/config/plugins/` folder (create it if it doesn't exist), and then modify there. This will override the default settings.
@@ -73,6 +79,8 @@ toc: false
 ```
 
 to disable the `Toc` plugin just for this page.
+
+> Notice: The [PHP iconv module](http://php.net/manual/en/function.iconv.php) is required in order to properly convert UTF-8 titles into human readable slugs.
 
 ### Twig Filter
 

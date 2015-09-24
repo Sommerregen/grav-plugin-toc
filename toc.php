@@ -1,6 +1,6 @@
 <?php
 /**
- * Toc v1.2.1
+ * Toc v1.3.0
  *
  * This plugin automagically generates a (minified) Table of Contents
  * based on special markers in the document and adds it into the
@@ -10,7 +10,7 @@
  * http://benjamin-regler.de/license/
  *
  * @package     Toc
- * @version     1.2.1
+ * @version     1.3.0
  * @link        <https://github.com/sommerregen/grav-plugin-external-links>
  * @author      Benjamin Regler <sommerregen@benjamin-regler.de>
  * @copyright   2015, Benjamin Regler
@@ -61,16 +61,14 @@ class TocPlugin extends Plugin
   public static function getSubscribedEvents()
   {
     return [
-      'onTwigInitialized' => ['onTwigInitialized', 0],
-      'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0],
-      'onPageInitialized' => ['onPageInitialized', 0],
-      'onShortcodesInitialized' => ['onShortcodesInitialized', 0]
+      'onPluginsInitialized' => ['onPluginsInitialized', 0],
     ];
   }
+
   /**
-   * Initialize configuration.
+   * Initialize configuration
    */
-  public function onPageInitialized()
+  public function onPluginsInitialized()
   {
     if ($this->isAdmin()) {
       $this->active = false;
@@ -79,8 +77,16 @@ class TocPlugin extends Plugin
 
     if ($this->config->get('plugins.toc.enabled')) {
       $this->enable([
+        // Page
         'onPageContentProcessed' => ['onPageContentProcessed', 0],
-        'onTwigSiteVariables' => ['onTwigSiteVariables', 0]
+
+        // Twig
+        'onTwigInitialized' => ['onTwigInitialized', 0],
+        'onTwigSiteVariables' => ['onTwigSiteVariables', 0],
+        'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0],
+
+        // Shortcodes
+        'onShortcodesInitialized' => ['onShortcodesInitialized', 0]
       ]);
     }
   }
@@ -98,10 +104,12 @@ class TocPlugin extends Plugin
     $page = $event['page'];
 
     $config = $this->mergeConfig($page);
-    if ($config->get('enabled')) {
+    if ($config->get('enabled') && $config->get('process')) {
       // Get content, apply TocFilter and save modified page content
       $content = $page->getRawContent();
-      $page->setRawContent($this->tocFilter($content));
+      $page->setRawContent(
+        $this->tocFilter($content, $config->toArray(), $page)
+      );
     }
   }
 
@@ -146,10 +154,11 @@ class TocPlugin extends Plugin
   public function tocFilter($content, $params = [])
   {
     // Get custom user configuration
-    $config = $this->mergeConfig($this->grav['page'], $params);
+    $page = func_num_args() > 2 ? func_get_arg(2) : $this->grav['page'];
+    $config = $this->mergeConfig($page, true, $params);
 
-    // Process content (apply TOC filter)
-    return $this->init()->process($content, $config);
+    // Render Toc
+    return $this->init()->render($content, $config, $page);
   }
 
   /**
@@ -161,11 +170,7 @@ class TocPlugin extends Plugin
   {
     $toc = $this->init();
     $function = function($event) {
-      $this->enable([
-        'onPageContentProcessed' => ['onPageContentProcessed', 0]
-      ]);
-
-        // Update header to variable to bypass evaluation
+      // Update header to bypass evaluation
       if (isset($event['page']->header()->toc->enabled)) {
         $event['page']->header()->toc->enabled = true;
       }
@@ -189,40 +194,6 @@ class TocPlugin extends Plugin
    */
 
   /**
-   * Merge global and page configurations.
-   *
-   * @param Page  $page    The page to merge the configurations with the
-   *                       plugin settings.
-   * @param array $params  Array of additional configuration options to
-   *                       merge with the plugin settings.
-   *
-   * @param bool  $deep    Should you use deep or shallow merging
-   *
-   * @return \Grav\Common\Data\Data
-   */
-  protected function mergeConfig(Page $page, $params = [], $deep = false)
-  {
-    $config = parent::mergeConfig($page, $deep);
-    $header = $page->header();
-
-    // Check whether this plugin is enabled or disabled via page header
-    if (isset($header->{$this->name})) {
-      if (is_bool($header->{$this->name})) {
-        // Overwrite boolean value
-        $config->set('enabled', $header->{$this->name});
-      }
-    }
-
-    // Merge additional parameter for configuration options
-    if (count($params)) {
-      $config->merge($params);
-    }
-
-    // Return modified config
-    return $config;
-  }
-
-  /**
    * Initialize plugin and all dependencies.
    *
    * @return \Grav\Plugin\ExternalLinks   Returns ExternalLinks instance.
@@ -233,10 +204,6 @@ class TocPlugin extends Plugin
       // Initialize Toc class
       require_once(__DIR__ . '/classes/Toc.php');
       $this->toc = new Toc();
-
-      $this->enable([
-        'onTwigSiteVariables' => ['onTwigSiteVariables', 0]
-      ]);
     }
 
     return $this->toc;

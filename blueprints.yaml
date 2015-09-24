@@ -1,5 +1,5 @@
 name: "Toc"
-version: 1.2.1
+version: 1.3.0
 description: "This plugin automagically generates a (minified) Table of Contents based on special markers in the document and adds it into the resulting HTML document."
 icon: language
 author:
@@ -82,7 +82,7 @@ form:
 
         placement:
           type: select
-          size: medium
+          size: small
           label: PLUGINS.TOC.PLACEMENT
           default: left
           options:
@@ -98,6 +98,14 @@ form:
             hover: PLUGINS.TOC.VISIBLILITY_HOVER
             always: PLUGINS.TOC.VISIBLILITY_ALWAYS
 
+        class:
+          type: selectize
+          size: large
+          label: PLUGINS.TOC.CLASS
+          help: PLUGINS.TOC.CLASS_HELP
+          validate:
+            type: commalist
+
         icon:
           type: text
           size: x-small
@@ -107,14 +115,6 @@ form:
           default: "#"
           validate:
             type: string
-
-        class:
-          type: selectize
-          size: medium
-          label: PLUGINS.TOC.CLASS
-          help: PLUGINS.TOC.CLASS_HELP
-          validate:
-            type: commalist
 
         baselevel:
           type: text
@@ -135,3 +135,60 @@ form:
             type: int
             min: 1
             max: 6
+
+        process:
+          type: toggle
+          label: PLUGINS.TOC.PROCESS
+          highlight: 1
+          default: 1
+          options:
+            1: PLUGIN_ADMIN.YES
+            0: PLUGIN_ADMIN.NO
+          validate:
+            type: bool
+
+        slug:
+          type: section
+          title: PLUGINS.TOC.SLUG.SECTION
+
+          fields:
+            slug.truncate:
+              type: toggle
+              label: PLUGINS.TOC.SLUG.TRUNCATE
+              default: 1
+              options:
+                1: PLUGIN_ADMIN.YES
+                0: PLUGIN_ADMIN.NO
+              validate:
+                type: bool
+
+            slug.length:
+              type: text
+              size: x-small
+              label: PLUGINS.TOC.SLUG.LENGTH
+              default: 32
+              placeholder: 32
+              validate:
+                type: int
+                min: 1
+                max: 255
+
+            slug.break:
+              type: text
+              size: x-small
+              label: PLUGINS.TOC.SLUG.BREAK
+              help: PLUGINS.TOC.SLUG.BREAK_HELP
+              default: "-"
+              placeholder: "-"
+              validate:
+                type: string
+
+            slug.pad:
+              type: text
+              size: x-small
+              label: PLUGINS.TOC.SLUG.PAD
+              help: PLUGINS.TOC.SLUG.PAD_HELP
+              default: "-..."
+              placeholder: "-..."
+              validate:
+                type: string
