@@ -24,7 +24,17 @@ de:
       CLASS: "Zusätzliche Klassen"
       CLASS_HELP: "Hinzufügen von zusätzlichen Klassen zum Anker-Link"
       BASELEVEL: "Beginne bei Überschrift x. Ordnung"
-      HEADINGLEVEL: "Maximale gezeigte Ordnung der Überschriften in TOC/MINITOC"
+      HEADINGLEVEL: "Maximal angezeigte Ordnung von Überschriften in TOC/MINITOC"
+
+      PROCESS: "Aktiviere <code>Toc</code>-Filter auf Seite"
+      SLUG:
+        SECTION: "Clean URL Erzeugung"
+        TRUNCATE: "Überschriften kürzen"
+        LENGTH: "Clean URL Länge"
+        BREAK: "Trennzeichen"
+        BREAK_HELP: "Trennzeichen welches zwischen Wörtern in der Clean URL eingesetzt wird"
+        PAD: "Addendum"
+        PAD_HELP: "Zusatz, der am Ende der verkürzte Clean URL kennzeichnet"
 
       PATTERNS:
         # Replace non letter or digits by -
@@ -62,6 +72,16 @@ en:
       CLASS_HELP: "Adds the provided class to the anchor link"
       BASELEVEL: "Base level for headings"
       HEADINGLEVEL: "Maximum heading level to show in TOC/MINITOC"
+
+      PROCESS: "Activate <code>Toc</code> filter on the page"
+      SLUG:
+        SECTION: "Slug generation"
+        TRUNCATE: "Truncate headings for slug generation"
+        LENGTH: "Slug string length"
+        BREAK: "Break delimiter"
+        BREAK_HELP: "The break delimiter to divide the slug into pieces of words"
+        PAD: "Addendum"
+        PAD_HELP: "Added to the end of the truncated slug"
 
       PATTERNS:
         # Replace non letter or digits by -

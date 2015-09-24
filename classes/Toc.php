@@ -10,7 +10,7 @@
 
 namespace Grav\Plugin;
 
-use Grav\Common\Grav;
+use ForceUTF8\Encoding;
 use Grav\Common\GravTrait;
 use RocketTheme\Toolbox\Event\Event;
 
@@ -35,6 +35,13 @@ class Toc
    */
   protected $language;
 
+  /**
+   * Current options of the page
+   *
+   * @var Grav\Common\Data\Data
+   */
+  protected $options;
+
   /** ---------------------------
    * Private/protected properties
    * ----------------------------
@@ -56,6 +63,15 @@ class Toc
    * Public methods
    * --------------
    */
+
+  /**
+   * Constructor.
+   */
+  public function __construct()
+  {
+    // Load ForceUTF8 package
+    require_once(dirname(__DIR__) . '/vendor/ForceUTF8/src/ForceUTF8/Encoding.php');
+  }
 
   /**
    * Create and link the table of contents at the top of the file.
@@ -212,19 +228,20 @@ class Toc
   /**
    * Process contents i.e. apply TOC filer to the content.
    *
-   * @param  string $content The content to be processed
-   * @param  array  $options Array of options for the TOC filter
+   * @param  string     $content The content to render.
+   * @param  array      $options Options to be passed to the renderer.
+   * @param  null|Page  $page    Null or an instance of \Grav\Common\Page.
    *
-   * @return string          The processed content
+   * @return string              The rendered contents.
    */
-  public function process($content, $options = [])
+  public function render($content, $options = [], $page = null)
   {
     /** @var Twig $twig */
     $twig = self::getGrav()['twig'];
 
-    /** @var @var \Grav\Common\Page\Page $page */
-    $page = self::getGrav()['page'];
+    // Save current user language
     $this->language = $page->language() ? [$page->language()] : null;
+    $this->options = $options;
 
     $replacements = [];
     // Find all occurrences of TOC and MINITOC in content
@@ -265,7 +282,8 @@ class Toc
           'heading' => ($current > -1) ? $toc[$current] : null,
         ] + $options->toArray();
 
-        $minitoc = $twig->processTemplate('partials/toc'.TEMPLATE_EXT, $vars);
+        $template = 'partials/toc' . TEMPLATE_EXT;
+        $minitoc = $twig->processTemplate($template, $vars);
 
         // Save rendered TOC for later replacement
         $replacements[] = $minitoc;
@@ -421,7 +439,7 @@ class Toc
     if (function_exists('iconv')) {
       $text = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $text);
     } else {
-      $text = mb_convert_encoding($text, 'UTF-8', 'ISO-8859-15');
+      $text = Encoding::toLatin1(Encoding::toUTF8($text));
     }
 
     // Lowercase
@@ -433,8 +451,14 @@ class Toc
     // Trim dashes from the beginning and end of string
     $text = trim($text, '.-_ ');
 
-    // Truncate string (hard-coded configurations)
-    $text = $this->truncate($text, $limit = 32);
+    // Truncate string
+    if ($this->options->get('slug.truncate')) {
+      $limit = $this->options->get('slug.length', 32);
+      $break = $this->options->get('slug.break', '-');
+      $pad = $this->options->get('slug.pad', '-...');
+
+      $text = $this->truncate($text, $limit, $break, $pad);
+    }
 
     // Provide default
     if (empty($text)) {
