@@ -12,7 +12,7 @@
     * [Twig Filter](#twig-filter)
     * [CSS Stylesheet Override](#css-stylesheet-override)
 * [Contributing](#contributing)
-* [Licencse](#license)
+* [License](#license)
 
 ## About
 
