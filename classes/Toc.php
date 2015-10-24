@@ -246,48 +246,55 @@ class Toc
     $replacements = [];
     // Find all occurrences of TOC and MINITOC in content
     $regex = '~(<p>)?\s*\[(?P<type>(?:MINI)?TOC)\]\s*(?(1)</p>)~i';
-    if (preg_match_all($regex, $content, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER)) {
-      // Generate TOC
-       $toc = $this->createToc($content);
-      foreach ($matches as $match) {
-        $offset = $match[0][1];
-        $type = strtolower($match['type'][0]);
+    if (preg_match_all($regex, $content, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER) === false) {
+      return $content;
+    }
 
-        // Initialize variables
-        $current = -1;
-        $minitoc = [];
+    // Generate TOC
+    $toc = $this->createToc($content);
+    if (empty($toc)) {
+      // Hide (mini-)toc marker
+      return preg_replace($regex, '', $content);
+    }
 
-        if ($type == 'toc') {
-          $minitoc = $toc;
-        } else {
-          // Get current (sub-)heading
-          foreach ($toc as $index => $heading) {
-            if ($index < $offset) {
-              $current = $index;
+    foreach ($matches as $match) {
+      $offset = $match[0][1];
+      $type = strtolower($match['type'][0]);
+
+      // Initialize variables
+      $current = -1;
+      $minitoc = [];
+
+      if ($type == 'toc') {
+        $minitoc = $toc;
+      } else {
+        // Get current (sub-)heading
+        foreach ($toc as $index => $heading) {
+          if ($index < $offset) {
+            $current = $index;
+          } else {
+            $level = $toc[$current]['level'];
+            if ($heading['level'] > $level) {
+              $minitoc[$index] = $heading;
             } else {
-              $level = $toc[$current]['level'];
-              if ($heading['level'] > $level) {
-                $minitoc[$index] = $heading;
-              } else {
-                break;
-              }
+              break;
             }
           }
         }
-
-        // Render TOC
-        $vars['toc'] = [
-          'list' => $minitoc,
-          'type' => $type,
-          'heading' => ($current > -1) ? $toc[$current] : null,
-        ] + $options->toArray();
-
-        $template = 'partials/toc' . TEMPLATE_EXT;
-        $minitoc = $twig->processTemplate($template, $vars);
-
-        // Save rendered TOC for later replacement
-        $replacements[] = $minitoc;
       }
+
+      // Render TOC
+      $vars['toc'] = [
+        'list' => $minitoc,
+        'type' => $type,
+        'heading' => ($current > -1) ? $toc[$current] : null,
+      ] + $options->toArray();
+
+      $template = 'partials/toc' . TEMPLATE_EXT;
+      $minitoc = $twig->processTemplate($template, $vars);
+
+      // Save rendered TOC for later replacement
+      $replacements[] = $minitoc;
     }
 
     // Tocify content
