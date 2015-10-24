@@ -252,9 +252,9 @@ class Toc
 
     // Generate TOC
     $toc = $this->createToc($content);
-
     if (empty($toc)) {
-      return preg_replace($regex, null, $content);
+      // Hide (mini-)toc marker
+      return preg_replace($regex, '', $content);
     }
 
     foreach ($matches as $match) {
