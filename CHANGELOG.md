@@ -1,3 +1,11 @@
+# v1.3.1
+## 10/24/2015
+
+2. [](#improved)
+  * Do not render TOC if it is empty. [#6](https://github.com/Sommerregen/grav-plugin-toc/issues/6) & [#7](https://github.com/Sommerregen/grav-plugin-toc/pull/7)
+3. [](#bugfix)
+  * Fixed [#5](https://github.com/Sommerregen/grav-plugin-toc/pull/5) (Fix typo in `README.md`)
+
 # v1.3.0
 ## 09/24/2015
 
