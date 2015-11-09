@@ -118,9 +118,12 @@ class TocPlugin extends Plugin
    */
   public function onTwigInitialized()
   {
-    // Expose tocFilter
+    // Expose tocFilter and tocifyFilter
     $this->grav['twig']->twig()->addFilter(
       new \Twig_SimpleFilter('toc', [$this, 'tocFilter'], ['is_safe' => ['html']])
+    );
+    $this->grav['twig']->twig()->addFilter(
+      new \Twig_SimpleFilter('tocify', [$this, 'tocifyFilter'], ['is_safe' => ['html']])
     );
   }
 
@@ -159,6 +162,20 @@ class TocPlugin extends Plugin
 
     // Render Toc
     return $this->init()->render($content, $config, $page);
+  }
+
+  /**
+   * Filter to return a (minified) table of contents of the text.
+   *
+   * @param  string $content  The content to be filtered
+   * @param  array  $options  Array of options for the Tocify filter
+   *
+   * @return array            An array with a list of elements
+   */
+  public function tocifyFilter($content, $params = [])
+  {
+    // Just generate a table of contents for the current document
+    return $this->init()->generateToc($content);
   }
 
   /**

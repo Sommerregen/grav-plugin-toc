@@ -243,6 +243,41 @@ class Toc
     $this->language = $page->language() ? [$page->language()] : null;
     $this->options = $options;
 
+    // Generate Toc
+    $replacements = $this->generateToc($content);
+    $regex = '~(<p>)?\s*\[(?P<type>(?:MINI)?TOC)\]\s*(?(1)</p>)~i';
+
+    if (empty($replacements)) {
+      // Hide (mini-)toc marker
+      return preg_replace($regex, '', $content);
+    }
+
+    // Tocify content
+    $content = $this->tocify($content, $options);
+    $this->language = null;
+
+    // Replace TOC and MINITOC placeholders
+    $content = preg_replace_callback($regex,
+      function($match) use ($replacements, $twig, $options) {
+        static $i = 0;
+
+        $vars['toc'] = $replacements[$i++] + $options->toArray();
+        $template = 'partials/toc' . TEMPLATE_EXT;
+        return $twig->processTemplate($template, $vars);
+    }, $content);
+
+    // Return modified content
+    return $content;
+  }
+
+  /**
+   * Generate a TOC of a given document.
+   *
+   * @param  string $content The content the TOC has to be generated for
+   * @return array           An array of TOCs
+   */
+  public function generateToc($content)
+  {
     $replacements = [];
     // Find all occurrences of TOC and MINITOC in content
     $regex = '~(<p>)?\s*\[(?P<type>(?:MINI)?TOC)\]\s*(?(1)</p>)~i';
@@ -254,7 +289,7 @@ class Toc
     $toc = $this->createToc($content);
     if (empty($toc)) {
       // Hide (mini-)toc marker
-      return preg_replace($regex, '', $content);
+      return [];
     }
 
     foreach ($matches as $match) {
@@ -283,33 +318,15 @@ class Toc
         }
       }
 
-      // Render TOC
-      $vars['toc'] = [
+      // Save rendered TOC for later replacement
+      $replacements[] = [
         'list' => $minitoc,
         'type' => $type,
         'heading' => ($current > -1) ? $toc[$current] : null,
-      ] + $options->toArray();
-
-      $template = 'partials/toc' . TEMPLATE_EXT;
-      $minitoc = $twig->processTemplate($template, $vars);
-
-      // Save rendered TOC for later replacement
-      $replacements[] = $minitoc;
+      ];
     }
 
-    // Tocify content
-    $content = $this->tocify($content, $options);
-    $this->language = null;
-
-    // Replace TOC and MINITOC placeholders
-    $content = preg_replace_callback($regex,
-      function($match) use ($replacements) {
-        static $i = 0;
-        return $replacements[$i++];
-    }, $content);
-
-    // Return modified content
-    return $content;
+    return $replacements;
   }
 
   /** -------------------------------
