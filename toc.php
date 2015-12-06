@@ -175,7 +175,7 @@ class TocPlugin extends Plugin
   public function tocifyFilter($content, $params = [])
   {
     // Just generate a table of contents for the current document
-    return $this->init()->generateToc($content);
+    return $this->init()->createToc($content);
   }
 
   /**
