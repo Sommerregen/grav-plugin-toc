@@ -96,7 +96,7 @@ class Toc
 
         if ($origin == 'markdown') {
           $tag = 'h'.strlen($tag);
-        // Don't consider headings in code or pre or blockquote environments
+        // Don't consider headings in code, pre or blockquote environments
         } elseif ($tag{0} !== 'h') {
           continue;
         }
@@ -196,9 +196,10 @@ class Toc
           if ('hover' !== ($visible = $options->get('visible', ' '))) {
             $extra .= 'headeranchor-visible-' . $visible . ' ';
           }
-          $extra .= implode(' ', [
+          $extra .= ltrim(implode(' ', [
             $options->get('hover', ''),
-            implode(' ', $options->get('class', []))]);
+            implode(' ', $options->get('class', []))])
+          );
 
           // Load header anchor link icon
           $icon = $options->get('icon', '#');
@@ -262,7 +263,7 @@ class Toc
         static $i = 0;
 
         $vars['toc'] = $replacements[$i++] + $options->toArray();
-        $template = 'partials/toc' . TEMPLATE_EXT;
+        $template = 'plugins/toc/toc' . TEMPLATE_EXT;
         return $twig->processTemplate($template, $vars);
     }, $content);
 
