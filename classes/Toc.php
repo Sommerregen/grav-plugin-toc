@@ -10,8 +10,8 @@
 
 namespace Grav\Plugin;
 
+use Grav\Common\Grav;
 use ForceUTF8\Encoding;
-use Grav\Common\GravTrait;
 use RocketTheme\Toolbox\Event\Event;
 
 /**
@@ -26,7 +26,6 @@ class Toc
   /**
    * @var Toc
    */
-  use GravTrait;
 
   /**
    * Current language of the document
@@ -238,7 +237,7 @@ class Toc
   public function render($content, $options = [], $page = null)
   {
     /** @var Twig $twig */
-    $twig = self::getGrav()['twig'];
+    $twig = Grav::instance()['twig'];
 
     // Save current user language
     $this->language = $page->language() ? [$page->language()] : null;
@@ -454,7 +453,7 @@ class Toc
 
     // Perform some language dependent replacements
     $lang = $language ? [$language]: $this->language;
-    $replacements = self::getGrav()['language']->translate('PLUGINS.TOC.PATTERNS', $lang, true);
+    $replacements = Grav::instance()['language']->translate('PLUGINS.TOC.PATTERNS', $lang, true);
     $text = preg_replace(array_keys($replacements), $replacements, $text);
 
     // Trim
