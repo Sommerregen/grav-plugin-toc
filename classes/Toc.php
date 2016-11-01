@@ -308,7 +308,7 @@ class Toc
           if ($index < $offset) {
             $current = $index;
           } else {
-            $level = $toc[$current]['level'];
+            $level = ($current > -1) ? $toc[$current]['level'] : -1;
             if ($heading['level'] > $level) {
               $minitoc[$index] = $heading;
             } else {
