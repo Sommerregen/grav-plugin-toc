@@ -207,9 +207,9 @@ class Toc
             $id, strip_tags($text), $text, rtrim($extra), $icon);
         }
 
-        // Add id attribute if permalinks or anchorlinks are used
+        // Add id attribute (and a "headeranchor" class) if permalinks or anchorlinks are used
         $link = $options->get('anchorlink', $options->get('permalink'));
-        $attributes += $link ? ['id' => $id] : [];
+        $attributes += $link ? ['id' => $id, 'class' => 'headeranchor'] : [];
 
         // Prevent TOC and MINITOC insertion in headings
         $text = str_ireplace(['[TOC]', '[MINITOC]'],
