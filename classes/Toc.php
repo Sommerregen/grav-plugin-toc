@@ -173,6 +173,8 @@ class Toc
         $attributes = $this->parseAttributes($match['attr']);
         $id = isset($attributes['id']) ? $attributes['id'] : $this->hyphenize($text);
 
+        $classes = isset($attributes['class']) ? $attributes['class'] . ' headeranchor' : 'headeranchor';
+        
         // Replace empty id with hash of text
         if (strlen($id) == 0) {
           $id = substr(md5($text), 0, 6);
@@ -209,7 +211,10 @@ class Toc
 
         // Add id attribute (and a "headeranchor" class) if permalinks or anchorlinks are used
         $link = $options->get('anchorlink', $options->get('permalink'));
-        $attributes += $link ? ['id' => $id, 'class' => 'headeranchor'] : [];
+        $attributes += $link ? ['id' => $id] : [];
+        if ($link) {
+          $attributes['class'] = $classes;
+        }
 
         // Prevent TOC and MINITOC insertion in headings
         $text = str_ireplace(['[TOC]', '[MINITOC]'],
