@@ -205,7 +205,7 @@ class Toc
           // Load header anchor link icon
           $icon = $options->get('icon', '#');
 
-          $text = sprintf('<a class="headeranchor-link%4$s" aria-hidden="true" href="#%s" name="%1$s" title="Permanent link: %2$s" data-icon="%5$s">%3$s</a>',
+          $text = sprintf('<a class="headeranchor-link%4$s" aria-hidden="true" href="#%$1s" title="Permanent link: %2$s" data-icon="%5$s">%3$s</a>',
             $id, strip_tags($text), $text, rtrim($extra), $icon);
         }
 
