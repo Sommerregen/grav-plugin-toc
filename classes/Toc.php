@@ -173,6 +173,8 @@ class Toc
         $attributes = $this->parseAttributes($match['attr']);
         $id = isset($attributes['id']) ? $attributes['id'] : $this->hyphenize($text);
 
+        $classes = isset($attributes['class']) ? $attributes['class'] . ' headeranchor' : 'headeranchor';
+        
         // Replace empty id with hash of text
         if (strlen($id) == 0) {
           $id = substr(md5($text), 0, 6);
@@ -203,13 +205,16 @@ class Toc
           // Load header anchor link icon
           $icon = $options->get('icon', '#');
 
-          $text = sprintf('<a class="headeranchor-link%4$s" aria-hidden="true" href="#%s" name="%1$s" title="Permanent link: %2$s" data-icon="%5$s">%3$s</a>',
+          $text = sprintf('<a class="headeranchor-link%4$s" aria-hidden="true" href="#%1$s" title="Permanent link: %2$s" data-icon="%5$s">%3$s</a>',
             $id, strip_tags($text), $text, rtrim($extra), $icon);
         }
 
-        // Add id attribute if permalinks or anchorlinks are used
+        // Add id attribute (and a "headeranchor" class) if permalinks or anchorlinks are used
         $link = $options->get('anchorlink', $options->get('permalink'));
         $attributes += $link ? ['id' => $id] : [];
+        if ($link) {
+          $attributes['class'] = $classes;
+        }
 
         // Prevent TOC and MINITOC insertion in headings
         $text = str_ireplace(['[TOC]', '[MINITOC]'],
