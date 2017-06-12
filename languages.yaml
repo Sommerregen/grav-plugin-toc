@@ -5,7 +5,10 @@ de:
       GLOBAL_CONFIG: "Globale Einstellungen"
       DEFAULT_CONFIG: "Standardeinstellungen für External Links"
       SPECIFIC_CONFIG:  "Globale und seitenspezifische Einstellungen"
+
       PLUGIN_STATUS: "Plugin Status"
+      PLUGIN_ACTIVE: "Aktiv"
+      PLUGIN_ACTIVE_HELP: "Verwende diese Option zur (De-)Aktivierung des Plugins auf bestimmten Seiten."
       BUILTIN_CSS: "Verwende mitgeliefertes CSS"
 
       TITLE: "Zeige Titel des Inhaltsverzeichnisses"
@@ -28,13 +31,20 @@ de:
 
       PROCESS: "Aktiviere <code>Toc</code>-Filter auf Seite"
       SLUG:
-        SECTION: "Clean URL Erzeugung"
+        SECTION: "Anker-ID Erzeugung"
         TRUNCATE: "Überschriften kürzen"
-        LENGTH: "Clean URL Länge"
+        LENGTH: "Anker-ID Länge"
         BREAK: "Trennzeichen"
-        BREAK_HELP: "Trennzeichen welches zwischen Wörtern in der Clean URL eingesetzt wird"
+        BREAK_HELP: "Trennzeichen welches zwischen Wörtern in der Anker-ID eingesetzt wird"
         PAD: "Addendum"
-        PAD_HELP: "Zusatz, der am Ende der verkürzte Clean URL kennzeichnet"
+        PAD_HELP: "Zusatz, der am Ende der verkürzten Anker-ID angezeigt wird"
+
+        GRANULARITY:
+          LABEL: "Granularität"
+          WORDS: "Wörter"
+          CHARACTERS: "Zeichen"
+
+      NOT_AVAILABLE: "unbekannt"
 
       PATTERNS:
         # Replace non letter or digits by -
@@ -52,7 +62,10 @@ en:
       GLOBAL_CONFIG: "Global plugin configurations"
       DEFAULT_CONFIG: "Default values for External Links configuration"
       SPECIFIC_CONFIG: "Global and page specific configurations"
+
       PLUGIN_STATUS: "Plugin status"
+      PLUGIN_ACTIVE: "Active"
+      PLUGIN_ACTIVE_HELP: "Use this option to (de-)activate this plugin on page."
       BUILTIN_CSS: "Use built in CSS"
 
       TITLE: "Show title in the Table of Contents"
@@ -82,6 +95,62 @@ en:
         BREAK_HELP: "The break delimiter to divide the slug into pieces of words"
         PAD: "Addendum"
         PAD_HELP: "Added to the end of the truncated slug"
+
+        GRANULARITY:
+          LABEL: "Granularity"
+          WORDS: "words"
+          CHARACTERS: "characters"
+
+      NOT_AVAILABLE: "n-a"
+
+      PATTERNS:
+        # Replace non letter or digits by -
+        '~\&~': 'and'
+        '~[^\p{L}\d]+~u': '-'
+        '~(\w{4,})y\-s\-~i': '$1ies-'
+        '~(\w{4,})\-s\-~i': '$1s-'
+
+        # Character replacements
+        '~([A-Z]+)([A-Z][a-z])~': '\1-\2'
+        '~([a-z]{2,})([A-Z])~': '\1-\2'
+
+# French
+fr:
+  PLUGINS:
+    TOC:
+      GLOBAL_CONFIG: "Configuration générale du plugin"
+      DEFAULT_CONFIG: "Configuration des valeurs par défaut pour les Liens Externes"
+      SPECIFIC_CONFIG: "Configuration générale et spécifique des pages"
+      PLUGIN_STATUS: "Statut du plugin"
+      BUILTIN_CSS: "Utiliser les CSS intégrés"
+
+      TITLE: "Afficher le titre dans la table des matières"
+      ANCHORLINK: "Afficher les liens d'ancrage"
+      ANCHORLINK_HELP: "Définir sur Vrai pour créer des liens sur les titres vers eux-mêmes."
+      PERMALINK: "Ajouter des permaliens aux titres"
+      PERMALINK_HELP: "Définir sur Vrai pour générer des permaliens au début de chaque titre"
+      PLACEMENT: "Position du lien d'ancrage"
+      PLACEMENT_LEFT: "Gauche"
+      PLACEMENT_RIGHT: "Droite"
+      VISIBLILITY: "Visibilité du lien d'ancrage"
+      VISIBLILITY_HOVER: "au survol - Visible au survol"
+      VISIBLILITY_ALWAYS: "toujours - Toujours visible"
+      ICON: "Icône du lien d'ancrage"
+      ICON_HELP: "Le lien par défaut ou un caractère spécifique comme : #, ¶, ❡, et §."
+      CLASS: "Classes supplémentaires"
+      CLASS_HELP: "Ajoute la classe fournie au lien d'ancrage"
+      BASELEVEL: "Niveau de base pour les titres"
+      HEADINGLEVEL: "Niveau maximum de la position à afficher dans TOC/MINITOC"
+
+      PROCESS: "Activer le filtrage <code>Toc</code> sur la page"
+      SLUG:
+        SECTION: "Génération de Slug"
+        TRUNCATE: "Tronquer les en-têtes pour la génération de slug"
+        LENGTH: "Longueur de la chaîne slug"
+        BREAK: "Délimiteur de séparation"
+        BREAK_HELP: "Le délimiteur pour séparer le slug en mots"
+        PAD: "Avenant"
+        PAD_HELP: "Ajouté à la fin du slug tronqué"
 
       PATTERNS:
         # Replace non letter or digits by -

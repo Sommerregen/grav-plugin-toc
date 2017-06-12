@@ -1,8 +1,28 @@
+# v1.4.0
+## 06/12/2017
+
+1. [](#new)
+  * Added new `active` setting that supersedes `process` option
+  * Added `slug.granularity` option for slug generation
+  * Added and expose TOC generation (see [#8](https://github.com/Sommerregen/grav-plugin-toc/issues/8))
+2. [](#improved)
+  * Add a "headeranchor" class to the `hx` tag (thanks to [@Lamecarlate](https://github.com/Lamecarlate))
+  * Moved template to new plugin template location
+  * Improved styling of code elements in table of contents
+  * Expose more plugin strings for translations
+  * Strip tags in title attributes
+  * Dropped `iconv` dependency
+3. [](#bugfix)
+  * Fixed `{{ page.content|toc }}` not working [#8](https://github.com/Sommerregen/grav-plugin-toc/issues/8)
+  * Fixed issue with quote boxes that broke links in TOC [#10](https://github.com/Sommerregen/grav-plugin-toc/issues/10)
+  * Fixed error on multilingual site [#13](https://github.com/Sommerregen/grav-plugin-toc/issues/13) & [#14](https://github.com/Sommerregen/grav-plugin-toc/issues/14)
+  * Fixed undefined offset error in [MINITOC] [#12](https://github.com/Sommerregen/grav-plugin-toc/issues/12) & [#15](https://github.com/Sommerregen/grav-plugin-toc/issues/15)
+
 # v1.3.1
 ## 10/24/2015
 
 2. [](#improved)
-  * Do not render TOC if it is empty. [#6](https://github.com/Sommerregen/grav-plugin-toc/issues/6) & [#7](https://github.com/Sommerregen/grav-plugin-toc/pull/7)
+  * Do not render TOC if it is empty [#6](https://github.com/Sommerregen/grav-plugin-toc/issues/6) & [#7](https://github.com/Sommerregen/grav-plugin-toc/pull/7)
 3. [](#bugfix)
   * Fixed [#5](https://github.com/Sommerregen/grav-plugin-toc/pull/5) (Fix typo in `README.md`)
 

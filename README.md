@@ -38,18 +38,19 @@ The `Toc` plugin comes with some sensible default configuration, that are pretty
 # Global plugin configurations
 
 enabled: true                # Set to false to disable this plugin completely
+active: true                 # Option to (de-)activate this plugin on a page
 built_in_css: true           # Use built-in CSS of the plugin
 
 # Global and page specific configurations
 
-title: true                  # Title to insert in the Table of Contents
+title: true                  # Title to insert in the table of contents
 anchorlink: true             # Set to true to cause all headers to link to themselves
 permalink: true              # Set to true to generate permanent links at the beginning of each header
 
 placement: "left"            # Either "left" or "right"
 visible: "hover"             # Active on "hover" or "always" visible
-icon:                        # Default link or a specific character like: #, ¶, ❡, and §.
-class:                       # Adds the provided class to the anchor html
+icon: "#"                    # Default link or a specific character like: #, ¶, ❡, and §
+class: []                    # Adds the provided classes to the anchor HTML
 
 baselevel: 1                 # Base level for headings
 headinglevel: 6              # Maximum heading level to show in TOC
@@ -58,9 +59,8 @@ slug:                        # Slug generation
   truncate: true             # Truncate headings for slug generation
   length: 32                 # Slug string length
   break: "-"                 # The break delimiter to divide the slug into pieces of words.
-  pad: "-..."                # Added to the end of the truncated slug
-
-process: true                # Process table of contents
+  pad: "..."                 # Added to the end of the truncated slug
+  level: "words"             # Kind of slug generation (based on "words" or "character")
 ```
 
 If you need to change any value, then the best process is to copy the [toc.yaml](toc.yaml) file into your `users/config/plugins/` folder (create it if it doesn't exist), and then modify there. This will override the default settings.
@@ -126,7 +126,7 @@ Thanks!
 
 ## License
 
-Copyright (c) 2015 [Benjamin Regler][github]. See also the list of [contributors] who participated in this project.
+Copyright (c) 2015-2017 [Benjamin Regler][github]. See also the list of [contributors] who participated in this project.
 
 [Dual-licensed](LICENSE) for use under the terms of the [MIT][mit-license] or [GPLv3][gpl-license] licenses.
 
