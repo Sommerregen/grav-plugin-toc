@@ -57,10 +57,10 @@ headinglevel: 6              # Maximum heading level to show in TOC
 
 slug:                        # Slug generation
   truncate: true             # Truncate headings for slug generation
+  granularity: "words"       # Granularity of slug generation (based on "words" or "character")
   length: 32                 # Slug string length
   break: "-"                 # The break delimiter to divide the slug into pieces of words.
   pad: "..."                 # Added to the end of the truncated slug
-  level: "words"             # Kind of slug generation (based on "words" or "character")
 ```
 
 If you need to change any value, then the best process is to copy the [toc.yaml](toc.yaml) file into your `users/config/plugins/` folder (create it if it doesn't exist), and then modify there. This will override the default settings.
