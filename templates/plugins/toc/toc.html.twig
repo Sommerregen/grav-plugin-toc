@@ -38,7 +38,7 @@
 
     {# Show TOC link based on anchorlinks option #}
     {% if toc.anchorlink %}
-      <li><a href="#{{ entry.id }}" class="toclink" title="{{ entry.text }}">{{ entry.text }}</a></li>
+      <li><a href="#{{ entry.id|e('html_attr') }}" class="toclink" title="{{ entry.text|striptags }}">{{ entry.text }}</a></li>
     {% else %}
       <li><span class="toclink">{{ entry.text|truncate(32, " ") }}</span></li>
     {% endif %}

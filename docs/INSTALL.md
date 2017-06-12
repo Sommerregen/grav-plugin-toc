@@ -31,7 +31,7 @@ As development for `Toc` continues, new versions may become available that add a
 
 The simplest way to update this plugin is via the [Grav Package Manager (GPM)](http://learn.getgrav.org/advanced/grav-gpm). You can do this with this by navigating to the root directory of your Grav install using your system's Terminal (also called command line) and typing the following:
 
-	bin/gpm update shortcodes
+	bin/gpm update toc
 
 This command will check your Grav install to see if your `Toc` plugin is due for an update. If a newer release is found, you will be asked whether or not you wish to update. To continue, type `y` and hit enter. The plugin will automatically update and clear Grav's cache.
 

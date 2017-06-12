@@ -5,7 +5,10 @@ de:
       GLOBAL_CONFIG: "Globale Einstellungen"
       DEFAULT_CONFIG: "Standardeinstellungen für External Links"
       SPECIFIC_CONFIG:  "Globale und seitenspezifische Einstellungen"
+
       PLUGIN_STATUS: "Plugin Status"
+      PLUGIN_ACTIVE: "Aktiv"
+      PLUGIN_ACTIVE_HELP: "Verwende diese Option zur (De-)Aktivierung des Plugins auf bestimmten Seiten."
       BUILTIN_CSS: "Verwende mitgeliefertes CSS"
 
       TITLE: "Zeige Titel des Inhaltsverzeichnisses"
@@ -28,13 +31,20 @@ de:
 
       PROCESS: "Aktiviere <code>Toc</code>-Filter auf Seite"
       SLUG:
-        SECTION: "Clean URL Erzeugung"
+        SECTION: "Anker-ID Erzeugung"
         TRUNCATE: "Überschriften kürzen"
-        LENGTH: "Clean URL Länge"
+        LENGTH: "Anker-ID Länge"
         BREAK: "Trennzeichen"
-        BREAK_HELP: "Trennzeichen welches zwischen Wörtern in der Clean URL eingesetzt wird"
+        BREAK_HELP: "Trennzeichen welches zwischen Wörtern in der Anker-ID eingesetzt wird"
         PAD: "Addendum"
-        PAD_HELP: "Zusatz, der am Ende der verkürzte Clean URL kennzeichnet"
+        PAD_HELP: "Zusatz, der am Ende der verkürzten Anker-ID angezeigt wird"
+
+        GRANULARITY:
+          LABEL: "Granularität"
+          WORDS: "Wörter"
+          CHARACTERS: "Zeichen"
+
+      NOT_AVAILABLE: "unbekannt"
 
       PATTERNS:
         # Replace non letter or digits by -
@@ -52,7 +62,10 @@ en:
       GLOBAL_CONFIG: "Global plugin configurations"
       DEFAULT_CONFIG: "Default values for External Links configuration"
       SPECIFIC_CONFIG: "Global and page specific configurations"
+
       PLUGIN_STATUS: "Plugin status"
+      PLUGIN_ACTIVE: "Active"
+      PLUGIN_ACTIVE_HELP: "Use this option to (de-)activate this plugin on page."
       BUILTIN_CSS: "Use built in CSS"
 
       TITLE: "Show title in the Table of Contents"
@@ -82,6 +95,13 @@ en:
         BREAK_HELP: "The break delimiter to divide the slug into pieces of words"
         PAD: "Addendum"
         PAD_HELP: "Added to the end of the truncated slug"
+
+        GRANULARITY:
+          LABEL: "Granularity"
+          WORDS: "words"
+          CHARACTERS: "characters"
+
+      NOT_AVAILABLE: "n-a"
 
       PATTERNS:
         # Replace non letter or digits by -
