@@ -1,3 +1,9 @@
+# v1.4.1
+## 06/12/2017
+
+3. [](#bugfix)
+  * Fixed new `slug.granularity` option in `toc.yaml` and `README.md`
+
 # v1.4.0
 ## 06/12/2017
 
