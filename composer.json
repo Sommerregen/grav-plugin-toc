@@ -1,0 +1,31 @@
+{
+    "name": "grav-plugin-toc",
+    "description": "This plugin automagically generates a (minified) Table of Contents based on special markers in the document and adds it into the resulting HTML document.",
+    "keywords": ["toc", "filter", "formatter", "plugin"],
+    "homepage": "https://github.com/sommerregen/grav-plugin-toc",
+    "license": "MIT/GPL",
+    "authors": [
+        {
+            "name": "Sommerregen",
+            "email": "sommerregen@benjamin-regler.de",
+            "homepage": "https://benjamin-regler.de",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "sommerregen@benjamin-regler.de",
+        "issues": "https://github.com/sommerregen/grav-plugin-toc/issues",
+        "irc": "https://gitter.im/sommerregen/chat",
+        "forum": "http://getgrav.org/forum",
+        "docs": "https://github.com/sommerregen/grav-plugin-toc/blob/master/README.md"
+    },
+    "require": {
+        "php": ">=5.6.0",
+        "neitanod/forceutf8": "~2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Grav\\Plugin\\Toc\\": "classes/"
+        }
+    }
+}
