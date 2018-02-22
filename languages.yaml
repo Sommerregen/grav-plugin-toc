@@ -55,6 +55,65 @@ de:
         '~([A-Z]+)([A-Z][a-z])~': '\1-\2'
         '~([a-z]{2,})([A-Z])~': '\1-\2'
 
+# Greek
+el:
+  PLUGINS:
+    TOC:
+      GLOBAL_CONFIG: "Καθολικές ρυθμίσεις προσθέτου"
+      DEFAULT_CONFIG: "Προεπιλεγμένες τιμές για τη διαμόρφωση των εξωτερικών συνδέσμων"
+      SPECIFIC_CONFIG: "Καθολικές και ανά σελίδα ρυθμίσεις"
+
+      PLUGIN_STATUS: "Κατάσταση προσθέτου"
+      PLUGIN_ACTIVE: "Ενεργό"
+      PLUGIN_ACTIVE_HELP: "Χρησιμοποιήστε αυτήν την επιλογή για να (απ-)ενεργοποιήσετε αυτό το πρόσθετο στην σελίδα."
+      BUILTIN_CSS: "Χρήση ενσωματωμένου CSS"
+
+      TITLE: "Εμφάνιση τίτλου στον πίνακα περιεχομένων"
+      ANCHORLINK: "Εμφάνιση anchor links"
+      ANCHORLINK_HELP: "Ρυθμίστε σε αληθές για να κάνετε τις επικεφαλίδες συνδέσμους που να οδηγούν προς τον εαυτό τους."
+      PERMALINK: "Προσθέστε μόνιμους συνδέσμους στις επικεφαλίδες"
+      PERMALINK_HELP: "Ρυθμίστε σε αληθές για να παραγάγετε μόνιμους συνδέσμους στην αρχή κάθε επικεφαλίδας"
+      PLACEMENT: "Θέση του anchor link"
+      PLACEMENT_LEFT: "Αριστερά"
+      PLACEMENT_RIGHT: "Δεξιά"
+      VISIBLILITY: "Ορατότητα του anchor link"
+      VISIBLILITY_HOVER: "αιώρηση - Ορατός όταν περνάει το ποντίκι από πάνω"
+      VISIBLILITY_ALWAYS: "πάντα - Πάντα ορατός"
+      ICON: "Εικονίδιο του anchor link"
+      ICON_HELP: "Προεπιλεγμένος σύνδεσμος ή ένας συγκεκριμένος χαρακτήρας όπως: #, ¶, ❡, και §."
+      CLASS: "Πρόσθετες κλάσεις"
+      CLASS_HELP: "Adds the provided class to the anchor link"
+      BASELEVEL: "Επίπεδο βάσηςBase level for headings"
+      HEADINGLEVEL: "Μέγιστο επίπεδο επικεφαλίδας που να εμφανίζεται στο TOC/MINITOC"
+
+      PROCESS: "Activate <code>Toc</code> filter on the page"
+      SLUG:
+        SECTION: "Slug generation"
+        TRUNCATE: "Ψαλίδισμα επικεφαλίδων για παραγωγή slug"
+        LENGTH: "Μήκος συμβολοσειράς Slug"
+        BREAK: "Διαχωριστικό"
+        BREAK_HELP: "Το διαχωριστικό που να διαιρεί σε  The break delimiter to divide the slug into pieces of words"
+        PAD: "Τελείωμα"
+        PAD_HELP: "Προστίθεται στο τέλος του ψαλιδισμένου slug"
+
+        GRANULARITY:
+          LABEL: "Τμηματοποίηση"
+          WORDS: "λέξεις"
+          CHARACTERS: "χαρακτήρες"
+
+      NOT_AVAILABLE: "n-a"
+
+      PATTERNS:
+        # Replace non letter or digits by -
+        '~\&~': 'and'
+        '~[^\p{L}\d]+~u': '-'
+        '~(\w{4,})y\-s\-~i': '$1ies-'
+        '~(\w{4,})\-s\-~i': '$1s-'
+
+        # Character replacements
+        '~([A-Z]+)([A-Z][a-z])~': '\1-\2'
+        '~([a-z]{2,})([A-Z])~': '\1-\2'
+
 # English
 en:
   PLUGINS:
