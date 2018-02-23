@@ -101,7 +101,7 @@ el:
           WORDS: "λέξεις"
           CHARACTERS: "χαρακτήρες"
 
-      NOT_AVAILABLE: "n-a"
+      NOT_AVAILABLE: "e"      # από το «επικεφαλίδα»
 
       PATTERNS:
         # Replace non letter or digits by -
