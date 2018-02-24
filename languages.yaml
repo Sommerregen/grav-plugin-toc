@@ -55,6 +55,11 @@ de:
         '~([A-Z]+)([A-Z][a-z])~': '\1-\2'
         '~([a-z]{2,})([A-Z])~': '\1-\2'
 
+      ONPAGE:
+        TOC_TITLE: "Table of contents"
+        MINITOC_TITLE: "Overview"
+        TOOLTIP_PERMALINK: "Permanent link"
+
 # Greek
 el:
   PLUGINS:
@@ -113,6 +118,11 @@ el:
         # Character replacements
         '~([A-Z]+)([A-Z][a-z])~': '\1-\2'
         '~([a-z]{2,})([A-Z])~': '\1-\2'
+
+      ONPAGE:
+        TOC_TITLE: "Πίνακας περιεχομένων"
+        MINITOC_TITLE: "Επισκόπηση"
+        TOOLTIP_PERMALINK: "Μόνιμος σύνδεσμος"
 
 # English
 en:
@@ -173,6 +183,11 @@ en:
         '~([A-Z]+)([A-Z][a-z])~': '\1-\2'
         '~([a-z]{2,})([A-Z])~': '\1-\2'
 
+      ONPAGE:
+        TOC_TITLE: "Table of contents"
+        MINITOC_TITLE: "Overview"
+        TOOLTIP_PERMALINK: "Permanent link"
+
 # French
 fr:
   PLUGINS:
@@ -221,3 +236,8 @@ fr:
         # Character replacements
         '~([A-Z]+)([A-Z][a-z])~': '\1-\2'
         '~([a-z]{2,})([A-Z])~': '\1-\2'
+
+      ONPAGE:
+        TOC_TITLE: "Table of contents"
+        MINITOC_TITLE: "Overview"
+        TOOLTIP_PERMALINK: "Permanent link"
