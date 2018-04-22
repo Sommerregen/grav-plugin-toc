@@ -114,6 +114,8 @@ en:
         '~([A-Z]+)([A-Z][a-z])~': '\1-\2'
         '~([a-z]{2,})([A-Z])~': '\1-\2'
 
+      TOC_TITLE: "Table of contents"
+      MINITOC_TITLE: "Overview:"
 # French
 fr:
   PLUGINS:
@@ -162,3 +164,6 @@ fr:
         # Character replacements
         '~([A-Z]+)([A-Z][a-z])~': '\1-\2'
         '~([a-z]{2,})([A-Z])~': '\1-\2'
+
+      TOC_TITLE: "Table des matières"
+      MINITOC_TITLE: "Vue d'ensemble"
