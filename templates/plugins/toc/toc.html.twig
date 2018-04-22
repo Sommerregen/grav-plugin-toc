@@ -3,9 +3,9 @@
   {% if toc.title %}
     {# Format header according to TOC type #}
     {% if toc.type == "toc" %}
-      <span class="toctitle">Table of contents:</span>
+      <span class="toctitle"> {{ 'PLUGINS.TOC.TOC_TITLE' | t }}</span>
     {% elseif toc.type == "minitoc" %}
-      <span class="toctitle">Overview:</span>
+      <span class="toctitle">{{ 'PLUGINS.TOC.MINITOC_TITLE' | t }}</span>
     {% endif %}
   {% endif %}
 
