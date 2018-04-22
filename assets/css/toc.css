@@ -23,15 +23,15 @@
   font-weight: bold;
   margin-bottom: .5em;
 }
-.table-of-contents ul {
+.table-of-contents ol {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-.table-of-contents > ul {
+.table-of-contents > ol {
   margin-left: 1.5em;
 }
-.table-of-contents ul ul {
+.table-of-contents ol ol {
   padding: 0 1em;
 }
 .table-of-contents li {

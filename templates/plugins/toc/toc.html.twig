@@ -1,11 +1,11 @@
 {# Render table of contents block #}
-<nav class="table-of-contents {{ toc.type }}" role="navigation">
+<nav class="table-of-contents {{ toc.type }}">
   {% if toc.title %}
     {# Format header according to TOC type #}
     {% if toc.type == "toc" %}
-      <span class="toctitle">Table of contents:</span>
+      <span class="toctitle"> {{ 'PLUGINS.TOC.TOC_TITLE' | t }}</span>
     {% elseif toc.type == "minitoc" %}
-      <span class="toctitle">Overview:</span>
+      <span class="toctitle">{{ 'PLUGINS.TOC.MINITOC_TITLE' | t }}</span>
     {% endif %}
   {% endif %}
 
@@ -17,7 +17,7 @@
     {% endif %}
   {% endfor %}
 
-  <ul>
+  <ol>
   {# Generate links #}
   {% set level = base_indent %}
   {% for entry in toc.list if (toc.baselevel <= entry.level) and (entry.level <= toc.headinglevel) %}
@@ -25,32 +25,34 @@
     {# Create list markup for headings #}
     {% if entry.indent > level %}
       {% for i in 1..(entry.indent - level) %}
-        <li><ul>
+      <ol>
       {% endfor %}
     {% elseif entry.indent < level %}
       {% for i in 1..(level - entry.indent) %}
-        </ul></li>
+      </ol>
       {% endfor %}
     {% endif %}
 
-    {# Set current level to heading level #}
-    {% set level = entry.indent %}
-
     {# Show TOC link based on anchorlinks option #}
     {% if toc.anchorlink %}
-      <li><a href="#{{ entry.id|e('html_attr') }}" class="toclink" title="{{ entry.text|striptags }}">{{ entry.text }}</a></li>
+      {% if not loop.first and entry.indent == level %}</li>{% endif %}
+      <li><a href="#{{ entry.id }}" class="toclink" title="{{ entry.text }}">{{ entry.text }}</a>
     {% else %}
-      <li><span class="toclink">{{ entry.text|truncate(32, " ") }}</span></li>
+      {% if not loop.first and entry.indent == level %}</li>{% endif %}
+      <li><span class="toclink">{{ entry.text|truncate(32, " ") }}</span>
     {% endif %}
+    {# Set current level to heading level #}
+    {% set level = entry.indent %}
   {% endfor %}
 
   {# Add missing closing tags #}
   {% if (level - base_indent) > 0 %}
     {% for i in 1..(level - base_indent) %}
-      </ul></li>
+  </ol></li>
     {% endfor %}
   {% endif %}
 
-  </ul>
+</li>
+</ol>
 </nav>
 
